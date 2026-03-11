@@ -32,7 +32,7 @@ export function CandidateList() {
   if (loading && candidates.length === 0) {
     return (
       <div className="p-8 flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 dark:border-slate-800 border-b-primary"></div>
       </div>
     );
   }

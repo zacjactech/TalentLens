@@ -62,17 +62,8 @@ export const Settings = () => {
     ];
 
     return (
-        <div className="flex flex-col h-full bg-background-light dark:bg-background-dark">
-            <header className="px-8 py-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-primary z-10 transition-colors">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white transition-colors">Settings</h1>
-                        <p className="text-gray-500 dark:text-gray-400 mt-1 transition-colors">
-                            Manage your account preferences and application layout
-                        </p>
-                    </div>
-                </div>
-            </header>
+        <div className="flex flex-col h-full bg-background-light dark:bg-background-dark overflow-hidden">
+
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Settings Sidebar */}

@@ -7,10 +7,10 @@ export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             gcTime: 1000 * 60 * 60 * 24 * 7, // 7 Days garbage collection
-            staleTime: 1000 * 60 * 5, // 5 minutes before considering dirty
+            staleTime: 1000 * 60 * 10, // 10 minutes before considering dirty
             retry: 3, // Retry failed network requests
-            refetchOnWindowFocus: true, // Auto-background sync on active tab
-            refetchOnMount: true, // Sync on page load initially
+            refetchOnWindowFocus: false, // Don't sync on tab focus to reduce noise
+            refetchOnMount: false, // Rely on staleTime for mount sync
             networkMode: 'offlineFirst', // Let queries return cached data instantly
         },
         mutations: {
