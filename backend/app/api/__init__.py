@@ -40,9 +40,14 @@ def get_diagnostics():
         db_url = os.getenv("DATABASE_URL", "MISSING")
         masked_db_url = db_url[:20] + "..." if db_url != "MISSING" else "MISSING"
         
+        db_host = "N/A"
+        if "@" in db_url:
+            db_host = db_url.split("@")[-1].split("/")[0]
+        
         return {
             "database_url_status": "present" if db_url != "MISSING" else "MISSING",
             "database_url_preview": masked_db_url,
+            "database_host": db_host,
             "bcrypt_version": getattr(bcrypt, "__version__", "unknown"),
             "cwd": os.getcwd(),
             "files": os.listdir(".")
