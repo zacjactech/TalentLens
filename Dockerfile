@@ -12,6 +12,9 @@ ENV MINIO_SECRET_KEY=minioadmin
 ENV JWT_ALGORITHM=HS256
 ENV ACCESS_TOKEN_EXPIRE_MINUTES=30
 ENV INTERNAL_API_KEY=hf_internal_key
+# Build-time placeholders (user should set these in HF Secrets for runtime)
+ENV JWT_SECRET_KEY=build_placeholder_secret
+ENV GEMINI_API_KEY=build_placeholder_key
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
