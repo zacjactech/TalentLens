@@ -9,6 +9,19 @@ api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 def health_check():
     return {"status": "healthy"}
 
+@api_router.get("/files")
+def list_backend_files():
+    try:
+        return {
+            "root_files": os.listdir("/app"),
+            "backend_files": os.listdir("/app/backend"),
+            "app_files": os.listdir("/app/backend/app"),
+            "api_files": os.listdir("/app/backend/app/api"),
+            "cwd": os.getcwd()
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 @api_router.get("/logs")
 def get_logs():
     try:
