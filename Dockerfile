@@ -53,12 +53,16 @@ COPY chatbot/requirements.txt /app/chatbot/
 # ---- Backend venv (pydantic v2) ----
 RUN python -m venv /opt/venv/backend && \
     /opt/venv/backend/bin/pip install --no-cache-dir --upgrade pip && \
-    /opt/venv/backend/bin/pip install --no-cache-dir -r /app/backend/requirements.txt
+    /opt/venv/backend/bin/pip install --no-cache-dir -r /app/backend/requirements.txt && \
+    # Diagnostics
+    /opt/venv/backend/bin/python -c "import pydantic; print(f'Backend Pydantic version: {pydantic.__version__}')"
 
 # ---- Chatbot venv (pydantic v1 / Rasa) ----
 RUN python -m venv /opt/venv/chatbot && \
     /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade pip && \
-    /opt/venv/chatbot/bin/pip install --no-cache-dir -r /app/chatbot/requirements.txt
+    /opt/venv/chatbot/bin/pip install --no-cache-dir -r /app/chatbot/requirements.txt && \
+    # Diagnostics
+    /opt/venv/chatbot/bin/python -c "import pydantic; print(f'Chatbot Pydantic version: {pydantic.__version__}')"
 
 # ---- App Phase ----
 # Copy the rest of the application code
@@ -74,7 +78,9 @@ RUN export VITE_API_URL=/api/v1 && \
 
 # Ensure postgres has correct permissions before switching user
 RUN chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql && \
-    chmod -R 700 /var/lib/postgresql
+    chmod -R 700 /var/lib/postgresql && \
+    # IMPORTANT: Ensure postgres can access the backend venv for migrations
+    chmod -R 755 /opt/venv
 
 # Setup database and run migrations using the backend venv EXPLICITLY
 USER postgres
@@ -82,6 +88,9 @@ RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';" && \
     createdb -O talentlens talentlens_db && \
     cd /app/backend && \
+    # Debug info right before migration
+    echo "Using python: $(/opt/venv/backend/bin/python --version)" && \
+    echo "Python path: $(/opt/venv/backend/bin/python -c 'import sys; print(sys.path)')" && \
     PYTHONPATH=/app/backend /opt/venv/backend/bin/python -m alembic upgrade head
 USER root
 
