@@ -2,9 +2,7 @@
 FROM python:3.10-bullseye
 
 # Skip interactive prompts
-# Build Trigger: 2026-03-11T09:05:00
 ENV DEBIAN_FRONTEND=noninteractive
-
 ENV PYTHONUNBUFFERED=1
 ENV DATABASE_URL=postgresql://talentlens:talentlens@localhost:5432/talentlens_db
 ENV REDIS_URL=redis://localhost:6379/0
@@ -43,43 +41,40 @@ RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio \
 # Set up working directory
 WORKDIR /app
 
-# Create necessary directories and set permissions for HF user (UID 1000)
+# Create necessary directories and set permissions
 RUN mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/log/supervisor /var/run/postgresql /var/run/redis && \
     chmod -R 777 /data /var/log /var/run /var/lib/redis
-
 
 # Copy project files
 COPY . .
 
 # Build Frontend
 WORKDIR /app/frontend
-# Inject relative API URL during build
 RUN export VITE_API_URL=/api/v1 && \
     pnpm install && \
     pnpm run build && \
     mkdir -p /var/www/html && \
     cp -r dist/* /var/www/html/
 
-# Install Backend Dependencies
-WORKDIR /app/backend
-RUN pip install --no-cache-dir -r requirements.txt
+# ---- Backend venv (pydantic v2) ----
+RUN python -m venv /opt/venv/backend
+RUN /opt/venv/backend/bin/pip install --no-cache-dir -r /app/backend/requirements.txt
 
-# Install Chatbot Dependencies
-WORKDIR /app/chatbot
-RUN pip install --no-cache-dir -r requirements.txt
+# ---- Chatbot venv (pydantic v1 / Rasa) ----
+RUN python -m venv /opt/venv/chatbot
+RUN /opt/venv/chatbot/bin/pip install --no-cache-dir -r /app/chatbot/requirements.txt
 
 # Ensure postgres has correct permissions before switching user
 RUN chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql && \
     chmod -R 700 /var/lib/postgresql
 
+# Setup database and run migrations using the backend venv
 USER postgres
-
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';" && \
     createdb -O talentlens talentlens_db && \
-    # Apply migrations if possible
     cd /app/backend && \
-    PYTHONPATH=/app/backend alembic upgrade head
+    PYTHONPATH=/app/backend /opt/venv/backend/bin/alembic upgrade head
 USER root
 
 # Configure Nginx and Supervisor
@@ -95,6 +90,4 @@ RUN touch /var/log/supervisord.log /var/run/supervisord.pid && \
 # HF Spaces requires exposing 7860
 EXPOSE 7860
 
-# The app should run as a non-root user if possible, but supervisor often needs root to start services
-# For HF, we'll try running as root and supervisor will manage sub-processes
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
