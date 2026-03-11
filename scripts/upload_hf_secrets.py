@@ -1,20 +1,21 @@
 import os
 import argparse
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 from huggingface_hub import HfApi, login
 
 def upload_secrets(repo_id, env_path=".env"):
     """
-    Uploads secrets from a .env file to a Hugging Face Space.
+    Uploads ALL secrets from a .env file to a Hugging Face Space.
     Requires HF_TOKEN to be set in the .env file or environment.
     """
     if not os.path.exists(env_path):
         print(f"Error: {env_path} not found.")
         return
 
-    load_dotenv(env_path)
+    # Use dotenv_values to get all keys without necessarily loading them into env
+    config = dotenv_values(env_path)
     
-    hf_token = os.getenv("HF_TOKEN")
+    hf_token = config.get("HF_TOKEN") or os.getenv("HF_TOKEN")
     if not hf_token:
         print("Error: HF_TOKEN not found in environment or .env file.")
         print("Please create one at https://huggingface.co/settings/tokens (Write access).")
@@ -22,26 +23,23 @@ def upload_secrets(repo_id, env_path=".env"):
 
     api = HfApi(token=hf_token)
 
-    # Secrets to upload
-    secrets = [
-        "GEMINI_API_KEY",
-        "JWT_SECRET_KEY",
-        "INTERNAL_API_KEY",
-        "POSTGRES_PASSWORD",
-        "MINIO_ROOT_PASSWORD"
-    ]
+    # Keys to exclude from upload
+    exclude = ["HF_TOKEN"]
 
-    print(f"Uploading secrets to Space: {repo_id}")
-    for secret_name in secrets:
-        value = os.getenv(secret_name)
+    print(f"Syncing ALL secrets from {env_path} to Space: {repo_id}")
+    for secret_name, value in config.items():
+        if secret_name in exclude:
+            continue
+        
         if value:
             try:
+                # Add secret to Space (overwrites if exists)
                 api.add_space_secret(repo_id=repo_id, key=secret_name, value=value)
-                print(f"DONE: Successfully uploaded {secret_name}")
+                print(f"DONE: Successfully synced {secret_name}")
             except Exception as e:
-                print(f"ERROR: Failed to upload {secret_name}: {e}")
+                print(f"ERROR: Failed to sync {secret_name}: {e}")
         else:
-            print(f"SKIP: {secret_name} not found in .env")
+            print(f"SKIP: {secret_name} has no value")
 
 
 if __name__ == "__main__":

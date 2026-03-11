@@ -4,17 +4,6 @@ FROM python:3.10-bullseye
 # Skip interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
-ENV DATABASE_URL=postgresql://talentlens:talentlens@localhost:5432/talentlens_db
-ENV REDIS_URL=redis://localhost:6379/0
-ENV MINIO_ENDPOINT=localhost:9000
-ENV MINIO_ACCESS_KEY=minioadmin
-ENV MINIO_SECRET_KEY=minioadmin
-ENV JWT_ALGORITHM=HS256
-ENV ACCESS_TOKEN_EXPIRE_MINUTES=30
-ENV INTERNAL_API_KEY=hf_internal_key
-# Build-time placeholders (user should set these in HF Secrets for runtime)
-ENV JWT_SECRET_KEY=build_placeholder_secret
-ENV GEMINI_API_KEY=build_placeholder_key
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -56,16 +45,12 @@ RUN pip uninstall -y pydantic pydantic-settings alembic fastapi uvicorn
 # Backend venv
 RUN python -m venv /opt/venv/backend && \
     /opt/venv/backend/bin/pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    /opt/venv/backend/bin/pip install --no-cache-dir --upgrade -r /app/backend/requirements.txt && \
-    echo "Backend Venv Check:" && \
-    /opt/venv/backend/bin/python -c "import pydantic; print(f'Pydantic: {pydantic.VERSION}')"
+    /opt/venv/backend/bin/pip install --no-cache-dir --upgrade -r /app/backend/requirements.txt
 
 # Chatbot venv
 RUN python -m venv /opt/venv/chatbot && \
     /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade -r /app/chatbot/requirements.txt && \
-    echo "Chatbot Venv Check:" && \
-    /opt/venv/chatbot/bin/python -c "import pydantic; print(f'Pydantic: {pydantic.VERSION}')"
+    /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade -r /app/chatbot/requirements.txt
 
 COPY . .
 
@@ -80,15 +65,13 @@ RUN export VITE_API_URL=/api/v1 && \
 # Permissions
 RUN chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql && \
     chmod -R 700 /var/lib/postgresql && \
-    chmod -R 755 /opt/venv
+    chmod -R 755 /opt/venv && \
+    chmod +x /app/start.sh
 
-# Database and migrations
+# Database user creation (Database creation and migrations moved to runtime start.sh)
 USER postgres
 RUN /etc/init.d/postgresql start && \
-    psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';" && \
-    createdb -O talentlens talentlens_db && \
-    cd /app/backend && \
-    PYTHONPATH=/app/backend PYTHONNOUSERSITE=1 /opt/venv/backend/bin/python -m alembic upgrade head
+    psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';"
 USER root
 
 # Nginx and Supervisor
@@ -102,4 +85,5 @@ RUN touch /var/log/supervisord.log /var/run/supervisord.pid && \
 
 EXPOSE 7860
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Use the startup script to run migrations and then start supervisor
+ENTRYPOINT ["/app/start.sh"]
