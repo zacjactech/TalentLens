@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     git \
     wget \
+    sudo \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js
@@ -68,11 +69,7 @@ RUN chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql && \
     chmod -R 755 /opt/venv && \
     chmod +x /app/start.sh
 
-# Database user creation (Database creation and migrations moved to runtime start.sh)
-USER postgres
-RUN /etc/init.d/postgresql start && \
-    psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';"
-USER root
+# Database initialization and migrations moved to runtime start.sh
 
 # Nginx and Supervisor
 RUN rm -f /etc/nginx/sites-enabled/default && \

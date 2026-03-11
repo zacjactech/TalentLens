@@ -10,7 +10,17 @@ until pg_isready; do
   sleep 1
 done
 
-# Run migrations if database exists
+# Ensure the database and user exist (using secrets provided by HF Space)
+echo "Ensuring database user and DB exist..."
+if [ -n "$POSTGRES_USER" ] && [ -n "$POSTGRES_PASSWORD" ]; then
+    sudo -u postgres psql --command "CREATE USER $POSTGRES_USER WITH SUPERUSER PASSWORD '$POSTGRES_PASSWORD';" || echo "User already exists or error."
+fi
+
+if [ -n "$POSTGRES_DB" ] && [ -n "$POSTGRES_USER" ]; then
+    sudo -u postgres createdb -O $POSTGRES_USER $POSTGRES_DB || echo "Database already exists or error."
+fi
+
+# Run migrations
 echo "Running database migrations..."
 cd /app/backend
 PYTHONPATH=/app/backend PYTHONNOUSERSITE=1 /opt/venv/backend/bin/python -m alembic upgrade head

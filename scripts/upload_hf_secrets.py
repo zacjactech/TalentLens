@@ -32,6 +32,14 @@ def upload_secrets(repo_id, env_path=".env"):
             continue
         
         if value:
+            # Rewrite hostnames for single-container deployment on Hugging Face
+            if secret_name == 'DATABASE_URL':
+                value = value.replace('@postgres:5432', '@localhost:5432')
+            elif secret_name == 'REDIS_URL':
+                value = value.replace('redis://redis:6379', 'redis://localhost:6379')
+            elif secret_name == 'MINIO_ENDPOINT':
+                value = value.replace('minio:9000', 'localhost:9000')
+
             try:
                 # Add secret to Space (overwrites if exists)
                 api.add_space_secret(repo_id=repo_id, key=secret_name, value=value)
