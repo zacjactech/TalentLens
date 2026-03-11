@@ -1,9 +1,15 @@
 #!/bin/bash
 
 # Load environment variables from .env if present (prevents local DB fallback if secret isn't set yet)
+# Use a safer way to load .env without overwriting existing environment variables
 if [ -f /app/.env ]; then
-    echo "Loading environment from /app/.env"
-    export $(grep -v '^#' /app/.env | sed 's/ *= */=/g' | xargs)
+    echo "Loading environment from /app/.env (if not already set)"
+    set -a
+    # This will load .env but existing env vars take precedence in most shells if exported after, 
+    # but here we want to ensure we don't overwrite HF secrets.
+    # So we'll only load it if we don't have critical vars.
+    [ -z "$DATABASE_URL" ] && . /app/.env
+    set +a
 fi
 
 # In single-container environments (like HF Spaces with supervisord), 

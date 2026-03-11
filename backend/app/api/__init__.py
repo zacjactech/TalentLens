@@ -37,17 +37,13 @@ def get_logs():
 def get_diagnostics():
     try:
         import bcrypt
-        import passlib
-        try:
-            import passlib.handlers.bcrypt
-            passlib_bcrypt = "available"
-        except ImportError:
-            passlib_bcrypt = "missing"
+        db_url = os.getenv("DATABASE_URL", "MISSING")
+        masked_db_url = db_url[:20] + "..." if db_url != "MISSING" else "MISSING"
         
         return {
+            "database_url_status": "present" if db_url != "MISSING" else "MISSING",
+            "database_url_preview": masked_db_url,
             "bcrypt_version": getattr(bcrypt, "__version__", "unknown"),
-            "passlib_version": getattr(passlib, "__version__", "unknown"),
-            "passlib_bcrypt_handler": passlib_bcrypt,
             "cwd": os.getcwd(),
             "files": os.listdir(".")
         }
