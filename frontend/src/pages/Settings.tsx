@@ -66,25 +66,6 @@ export const Settings = () => {
 
 
             <div className="flex-1 flex overflow-hidden">
-                {/* Settings Sidebar */}
-                <div className="w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-primary overflow-y-auto transition-colors">
-                    <nav className="p-4 space-y-1">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${activeTab === tab.id
-                                    ? 'bg-indigo-50 dark:bg-accent/20 text-accent dark:text-indigo-400'
-                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white'
-                                    }`}
-                            >
-                                {renderTabIcon(tab.id)}
-                                {tab.label}
-                            </button>
-                        ))}
-                    </nav>
-                </div>
-
                 {/* Settings Content */}
                 <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-background-dark p-8 transition-colors">
                     <div className="max-w-3xl mx-auto space-y-8">
@@ -283,6 +264,25 @@ export const Settings = () => {
                         )}
 
                     </div>
+                </div>
+
+                {/* Settings Sidebar */}
+                <div className="w-64 border-l border-gray-200 dark:border-gray-800 bg-white dark:bg-primary overflow-y-auto transition-colors">
+                    <nav className="p-4 space-y-1">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${activeTab === tab.id
+                                    ? 'bg-indigo-50 dark:bg-accent/20 text-accent dark:text-indigo-400'
+                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white'
+                                    }`}
+                            >
+                                {renderTabIcon(tab.id)}
+                                {tab.label}
+                            </button>
+                        ))}
+                    </nav>
                 </div>
             </div>
         </div>
