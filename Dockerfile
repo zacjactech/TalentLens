@@ -42,8 +42,9 @@ RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio \
 WORKDIR /app
 
 # Create necessary directories and set permissions for HF user (UID 1000)
-RUN mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/lib/postgresql /var/log/supervisor /var/run/postgresql /var/run/redis && \
-    chmod -R 777 /data /var/log /var/run /var/lib/postgresql /var/lib/redis
+RUN mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/log/supervisor /var/run/postgresql /var/run/redis && \
+    chmod -R 777 /data /var/log /var/run /var/lib/redis
+
 
 # Copy project files
 COPY . .
@@ -65,10 +66,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app/chatbot
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Initial setup for Postgres (this part runs during build to prep the DB files)
-# Note: HF runtime might reset some of this if not using persistent storage,
-# but we need the DB created and schema applied.
+# Ensure postgres has correct permissions before switching user
+RUN chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql && \
+    chmod -R 700 /var/lib/postgresql
+
 USER postgres
+
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';" && \
     createdb -O talentlens talentlens_db && \
