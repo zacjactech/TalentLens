@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TalentLens Candidate Profile Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4b43e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                        "deep-trust": "#0f172a",
+                        "dense-slate": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-deep-trust text-white flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white">lens_blur</span>
+</div>
+<div>
+<h1 class="text-lg font-bold leading-tight">TalentLens</h1>
+<p class="text-xs text-slate-400">Recruiter Portal</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Candidates</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-sm font-medium">Interviews</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="text-sm font-medium">Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-800">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="relative">
+<img alt="Sarah Jenkins Profile" class="size-16 rounded-full object-cover ring-4 ring-primary/10" data-alt="Professional headshot of a smiling female engineer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWLpj0innZlmgyQZLKoVCE2ijC1OBtbNbZGJ_fi9K7VH80nUd7BVVxnwtZOhCOW7YosrgJimiVSVBm4pX8XPKZjD45Ft2MwPeyNnXS2Zn8BLrt4qUss4H_mZ3kNGdG-uTyuJ5cxBYFM-sW3gFHS7uvFlIn_8Ec3eh8G_uF6jCo04oMEhD701fRmDkFp2TwPTb19yT_RDjWOtjFa52B_Jr7vM_8jbCqNjSBxZwSngcQqiSmig9zs9N0cunHr4iDD9CTC4ri8Pb9p9o"/>
+<div class="absolute -bottom-1 -right-1 bg-green-500 size-4 border-2 border-white rounded-full"></div>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h2 class="text-2xl font-bold text-dense-slate dark:text-slate-100">Sarah Jenkins</h2>
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">Active</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">terminal</span> Senior Backend Engineer
+                                <span class="mx-1 text-slate-300">•</span>
+<span class="material-symbols-outlined text-sm">location_on</span> San Francisco, CA
+                            </p>
+</div>
+<div class="ml-8 px-6 py-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/50">
+<p class="text-[10px] uppercase tracking-wider font-bold text-emerald-600 dark:text-emerald-400">AI Match Score</p>
+<p class="text-2xl font-black text-emerald-600 dark:text-emerald-400">92/100</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+<span class="material-symbols-outlined text-lg">download</span> Resume
+                        </button>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">calendar_month</span> Schedule Follow-up Interview
+                        </button>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto space-y-8">
+<!-- Evaluation Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Left: AI Score Breakdown -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-dense-slate dark:text-slate-100 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span> AI Score Breakdown
+                            </h3>
+<span class="text-xs text-slate-400 font-medium">Last updated: 2 hours ago</span>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-slate-600 dark:text-slate-300">Relevant Experience</span>
+<span class="font-bold text-emerald-600">95%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5">
+<div class="bg-emerald-500 h-2.5 rounded-full" style="width: 95%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-slate-600 dark:text-slate-300">Job Stability</span>
+<span class="font-bold text-emerald-600">88%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5">
+<div class="bg-emerald-500 h-2.5 rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-slate-600 dark:text-slate-300">Communication Skills</span>
+<span class="font-bold text-amber-500">76%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5">
+<div class="bg-amber-400 h-2.5 rounded-full" style="width: 76%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-slate-600 dark:text-slate-300">System Architecture</span>
+<span class="font-bold text-emerald-600">92%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5">
+<div class="bg-emerald-500 h-2.5 rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-slate-600 dark:text-slate-300">Culture Fit</span>
+<span class="font-bold text-emerald-600">90%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5">
+<div class="bg-emerald-500 h-2.5 rounded-full" style="width: 90%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Resume Summary & Key Strengths -->
+<div class="space-y-8">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<h3 class="text-lg font-bold text-dense-slate dark:text-slate-100 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">smart_toy</span> Gemini AI Resume Summary
+                            </h3>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                                Sarah is a seasoned backend engineer with 8+ years of experience specializing in high-scale distributed systems and microservices. She has a strong track record at Series B startups and top-tier tech companies. Expert in Node.js, Go, and PostgreSQL with extensive Kubernetes knowledge.
+                            </p>
+<div class="border-t border-slate-100 dark:border-slate-800 pt-4 mt-4">
+<h4 class="text-sm font-bold text-dense-slate dark:text-slate-100 mb-3">Key Strengths</h4>
+<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<li class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-lg">check_circle</span> Scalability optimization
+                                    </li>
+<li class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-lg">check_circle</span> Mentorship experience
+                                    </li>
+<li class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-lg">check_circle</span> AWS Infrastructure
+                                    </li>
+<li class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-lg">check_circle</span> API Design (REST/gRPC)
+                                    </li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom: Interview Transcript -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col h-[500px]">
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
+<h3 class="text-lg font-bold text-dense-slate dark:text-slate-100 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">chat</span> Chatbot Interview Transcript
+                        </h3>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-500">Duration: 42m</span>
+<div class="h-4 w-px bg-slate-300 dark:bg-slate-700"></div>
+<span class="text-xs font-medium text-slate-500">Completed: Oct 24, 2023</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+<!-- Message AI -->
+<div class="flex gap-4 max-w-[85%]">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-xl">smart_toy</span>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">TalentLens Assistant • 10:02 AM</p>
+<div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none">
+<p class="text-sm text-slate-700 dark:text-slate-200">Hello Sarah! To start, could you tell me about a time you had to optimize a slow-performing backend system? What was the bottleneck and how did you resolve it?</p>
+</div>
+</div>
+</div>
+<!-- Message Candidate -->
+<div class="flex gap-4 max-w-[85%] ml-auto flex-row-reverse">
+<div class="size-8 rounded-full bg-slate-200 overflow-hidden shrink-0">
+<img alt="Sarah Jenkins" class="w-full h-full object-cover" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAssXk4siwVo_SreACAePgNzmNYsPHK2Cqj-bT7btxhS1duNLac6z8Kx7vzZAiHxzQMpQ1uJhKZ7zKt2mY1ClOE48qbaYWCRf8m_wOvc1TDVBrSPkZ_mE_qUz8BJXsKwTmnzMWjQ7q41OOA8ANEn-0nsG5SGiHohClWqDD_I_Aq4kJz0DUNpTR2fasQP7FgMIvhCRRCo2dwvu-Y4nFgumI9WQFuZe9S7LBCI3QTFBYfAHKWDAcNGNqDwDjy8FAq6sPLZK7bRGpxkCc"/>
+</div>
+<div class="space-y-1 text-right">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Sarah Jenkins • 10:05 AM</p>
+<div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none text-left">
+<p class="text-sm">At my previous role at FintechFlow, our main transactions API was spiking to 2s latency during peak hours. After profiling, I discovered we were doing redundant N+1 queries on our ledger records. I implemented a Redis caching layer for frequent lookups and optimized the PostgreSQL indices, which brought the P99 latency down to 150ms.</p>
+</div>
+</div>
+</div>
+<!-- Message AI -->
+<div class="flex gap-4 max-w-[85%]">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-xl">smart_toy</span>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">TalentLens Assistant • 10:07 AM</p>
+<div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none">
+<p class="text-sm text-slate-700 dark:text-slate-200">That's a significant improvement. How did you handle cache invalidation for those ledger records to ensure data consistency?</p>
+</div>
+</div>
+</div>
+<!-- Message Candidate -->
+<div class="flex gap-4 max-w-[85%] ml-auto flex-row-reverse">
+<div class="size-8 rounded-full bg-slate-200 overflow-hidden shrink-0">
+<img alt="Sarah Jenkins" class="w-full h-full object-cover" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWhM2y3iTTQMyGxPoBWa_w5yHlOMyy_XDhv0nF3j64gwyEjidyj1n5cc0yyQ3rrg3D0v3Thu2eqVBRqkOvkEhjMo6ZGjxkhnIqyVIHeJgIr6q3ZBe3xagIpbNZ5o_DBkWJT3Iu_usRgrGLLVdb5x2yBJWWvlkObYwTFsdkifG2Vwk3oOOzR3NptkrrP3kNqvpN_08prUR1Om28z8xOfPkYoZkIiZDdNwhvsrcd8Wr-AsyvpL_T4y9E7ZvfVjP2qBeeS1Y5IlN4YSQ"/>
+</div>
+<div class="space-y-1 text-right">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Sarah Jenkins • 10:11 AM</p>
+<div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none text-left">
+<p class="text-sm">We used a write-through strategy for the cache. Whenever the ledger service updated a record in PostgreSQL, it was responsible for updating or evicting the corresponding key in Redis within the same transaction scope using a two-phase commit pattern to ensure we didn't have stale data in the cache during high-throughput events.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center">
+<button class="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
+                            Download Full Transcript <span class="material-symbols-outlined text-lg">description</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

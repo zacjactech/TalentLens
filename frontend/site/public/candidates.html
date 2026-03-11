@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TalentLens Candidate Management List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5548e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#131121",
+                        "trust-blue": "#0f172a",
+                        "dense-slate": "#1e293b",
+                        "muted-slate": "#64748b",
+                        "emerald-green": "#10b981",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-dense-slate">
+<div class="flex min-h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-trust-blue text-white flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white">lens_blur</span>
+</div>
+<div>
+<h1 class="text-lg font-bold leading-none">TalentLens</h1>
+<p class="text-xs text-slate-400 mt-1">Recruiter Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Candidates</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="text-sm font-medium">Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-sm font-medium">Interviews</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+</nav>
+<div class="p-4 border-t border-white/10">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+<!-- Header -->
+<header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
+<div class="flex-1 max-w-md">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-slate group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-slate-100 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Global search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-muted-slate hover:bg-slate-100 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold text-dense-slate leading-none">Alex Thompson</p>
+<p class="text-xs text-muted-slate mt-1">Lead Recruiter</p>
+</div>
+<div class="size-10 rounded-full bg-slate-200 overflow-hidden ring-2 ring-white ring-offset-2 ring-offset-slate-100 shadow-sm border border-slate-200">
+<img class="w-full h-full object-cover" data-alt="User profile avatar of Alex Thompson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-YBGcXPmh9KQcFjHXEAm0ApgHMfQZQCC7ovbjudvKpnC-VIBxFFdPIEJF8SEHMLiapojyO0rAJibEJ3U5x-vja3FHIgsPfV-wnYkwOvz9NXz-iOgzWV6AnTBckWQP8Ypbgdten_ud08AYQjC4jYUgd74BSYiGaAFqOmg9bOlLW2FtDoZ4AypH199bpdjvRLFMtse2ScyUaxV3j_R6s5WUl_B6kvbdhEungKx1cVz6AloBqVAJiJ-hL-6M4xzgODf9MzecBJA50ns"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 space-y-6">
+<!-- Page Title -->
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-bold text-dense-slate">Candidate Management</h2>
+<p class="text-muted-slate text-sm">Manage applicants and track AI match scores across all open roles.</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+                        Add New Candidate
+                    </button>
+</div>
+<!-- Management Tools Container -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+<div class="flex flex-col md:flex-row gap-4 mb-6">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-slate">search</span>
+<input class="w-full border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:border-primary focus:ring-primary" placeholder="Search by name, email or keyword..." type="text"/>
+</div>
+<div class="flex gap-4">
+<div class="w-48">
+<select class="w-full border-slate-200 rounded-lg py-2.5 text-sm focus:border-primary focus:ring-primary">
+<option>Filter by Role</option>
+<option>Backend Engineer</option>
+<option>Frontend Engineer</option>
+<option>Product Manager</option>
+<option>UI/UX Designer</option>
+</select>
+</div>
+<div class="w-48">
+<select class="w-full border-slate-200 rounded-lg py-2.5 text-sm focus:border-primary focus:ring-primary">
+<option>Filter by Status</option>
+<option>Scored</option>
+<option>Pending</option>
+<option>Interviewed</option>
+<option>Rejected</option>
+</select>
+</div>
+<button class="flex items-center justify-center p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-muted-slate">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+<!-- Candidate Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-100">
+<th class="py-4 px-4 text-xs font-bold text-muted-slate uppercase tracking-wider">Candidate Name</th>
+<th class="py-4 px-4 text-xs font-bold text-muted-slate uppercase tracking-wider">Role</th>
+<th class="py-4 px-4 text-xs font-bold text-muted-slate uppercase tracking-wider">Experience</th>
+<th class="py-4 px-4 text-xs font-bold text-muted-slate uppercase tracking-wider">AI Match Score</th>
+<th class="py-4 px-4 text-xs font-bold text-muted-slate uppercase tracking-wider">Status</th>
+<th class="py-4 px-4 text-xs font-bold text-muted-slate uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- Candidate Row 1 -->
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Headshot of candidate Sarah Jenkins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv_XLXlhfIQcUd5CP1lzgdJkPKKr1FjMHYircKmQGccgteVGcAiit5sxMu4YfW50rT0BIgAHgIgmOVa-YZRafInyxePu1sQhkWnw3-pABJc2gxpPcz1N4kvD7JPaQJ26vx9iuh3A7kGvOqa4V7yoYKR3h8nh1b_wPp22ZBGco_zzOrqKzs5PDU_KrrWtn4ugW6-A2Qnltdd4xlOsQIrjy92s8UkEpAmYbOHRKZOKZDfyPX4xj7Bkk8bY2xUr44pGUJu8M1emTRnpI"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-dense-slate">Sarah Jenkins</p>
+<p class="text-xs text-muted-slate">s.jenkins@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">Backend Engineer</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">6 years</span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-green/10 text-emerald-green border border-emerald-green/20">
+                                            98 / 100
+                                        </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-blue-100 text-blue-700">
+                                            Interviewed
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<a class="text-primary font-semibold text-sm hover:underline" href="#">View Profile</a>
+</td>
+</tr>
+<!-- Candidate Row 2 -->
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Headshot of candidate Marcus Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiVXrvUe5Os2hTLshjbhANMEMIYdgAeRqUBYuiitVZ4MIsYvY7wFYdkEXhNWRbtxM1UMoJ1T_yhVW43UiqS--aTrzWV6aFNA8mNbtZVrM6S9XE628gB4KEIGjUi9QcTaOKrC0q9crT8X6ZcK5FHSobXhVRwXHZWBtcbbTFMn75jynL-zJN-Z0fzw0JjtjOKBO7M3Yvlx5QAliVt5Dj7pR1u3kYb9X2A1oSQNHyoJT8K_KrFloXHZw8J6RDva8HH2EHd3kn6z04PPM"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-dense-slate">Marcus Chen</p>
+<p class="text-xs text-muted-slate">m.chen@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">Frontend Engineer</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">4 years</span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-green/10 text-emerald-green border border-emerald-green/20">
+                                            92 / 100
+                                        </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700">
+                                            Scored
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<a class="text-primary font-semibold text-sm hover:underline" href="#">View Profile</a>
+</td>
+</tr>
+<!-- Candidate Row 3 -->
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Headshot of candidate Elena Rodriguez" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsaWNl_2P0jkY8vInFa82_B9RERLugz7k8NZ1rZupOqbfTtcGdbXLwNHMH36iDB9yUOCLUBh6LEGVqJya-yn_3HxfwO75CsnX2RUMsGc6MwYnYutQkseKrj3SnzgIx13EPbKkUrDFPTllnl602plduLfVCWa6SldmuVlzM40jOkqFPXHAZEplEckc15SEjt-zeWfXrVUPKoDKDPuROvDFIx3gUVk1P8uTImfPYXrM4GYshTl8eFZUARdjZkz-1acaMheOpwYkQCLY"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-dense-slate">Elena Rodriguez</p>
+<p class="text-xs text-muted-slate">e.rod@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">UI/UX Designer</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">8 years</span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-muted-slate border border-slate-200">
+                                            75 / 100
+                                        </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-100 text-slate-600">
+                                            Pending
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<a class="text-primary font-semibold text-sm hover:underline" href="#">View Profile</a>
+</td>
+</tr>
+<!-- Candidate Row 4 -->
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Headshot of candidate David Smith" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhH4wLazoBAexa8o_Kekc38XSs5ulKxQVjEl6OiAwUelYqBQo0rLwivQkcI27Kp3LUJBivqnff4BDn3DqvlUMgzqG4yBBxRy8aOFKrvIFbCeWc0ESF6FhpXWvuDg8TjfGdM0nhDOZEw3jSkMaSsoNe5e1zTTgOY4B4--JKhQFgUfE_gU5ehcBR1sR3Xeb8s03ejgaNpAjrqm4j92Ra3iNfshy003Ef1CmLUPsxnMN0KV9YmHHsRX6LRwPtC6TZRcLD3Ca91CwGX1k"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-dense-slate">David Smith</p>
+<p class="text-xs text-muted-slate">d.smith@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">Product Manager</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">5 years</span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-green/10 text-emerald-green border border-emerald-green/20">
+                                            89 / 100
+                                        </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-blue-100 text-blue-700">
+                                            Interviewed
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<a class="text-primary font-semibold text-sm hover:underline" href="#">View Profile</a>
+</td>
+</tr>
+<!-- Candidate Row 5 -->
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Headshot of candidate Kevin Park" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByF0AHDzwLqFvK2ymwudwD0ytLOfcRa_Svr7xCOip0Pj-2rfZo5SVUNNhh1ksje1re-DUWNI9vkO9RZ8jhkiHCaYfpoWircZxHpUXFCdMrCFCPicvFj6dW4uwhGY9z8CnrH7ihn0P3hSPcJyLeDpKKE9wklgbbOz4Gz1xQUxeBOMsweF9foVqR5pL5vzoV78W5a_9ckYS5zCA5ZpHRWRz05ONrdLyF2Mp-oxBuLMd-HUwRr_bDLTq4etB3wcW3ey8bp2VWy1qoFTI"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-dense-slate">Kevin Park</p>
+<p class="text-xs text-muted-slate">k.park@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">Backend Engineer</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-sm text-dense-slate">2 years</span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-muted-slate border border-slate-200">
+                                            62 / 100
+                                        </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-red-100 text-red-700">
+                                            Rejected
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<a class="text-primary font-semibold text-sm hover:underline" href="#">View Profile</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+<p class="text-sm text-muted-slate">Showing <span class="font-medium text-dense-slate">1</span> to <span class="font-medium text-dense-slate">5</span> of <span class="font-medium text-dense-slate">42</span> results</p>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded border border-slate-200 text-muted-slate hover:bg-slate-50 disabled:opacity-50 transition-colors text-sm" disabled="">Previous</button>
+<button class="size-8 rounded bg-primary text-white text-sm font-bold transition-all">1</button>
+<button class="size-8 rounded text-muted-slate hover:bg-slate-100 text-sm font-bold transition-all">2</button>
+<button class="size-8 rounded text-muted-slate hover:bg-slate-100 text-sm font-bold transition-all">3</button>
+<button class="px-3 py-1.5 rounded border border-slate-200 text-muted-slate hover:bg-slate-50 transition-colors text-sm">Next</button>
+</div>
+</div>
+</div>
+<!-- AI Insights Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+<div class="size-12 rounded-lg bg-emerald-green/10 flex items-center justify-center text-emerald-green">
+<span class="material-symbols-outlined text-[28px]">trending_up</span>
+</div>
+<div>
+<p class="text-xs font-bold text-muted-slate uppercase tracking-wider">Average Match Score</p>
+<p class="text-2xl font-bold text-dense-slate">84.2%</p>
+</div>
+</div>
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">stars</span>
+</div>
+<div>
+<p class="text-xs font-bold text-muted-slate uppercase tracking-wider">High Match Candidates</p>
+<p class="text-2xl font-bold text-dense-slate">12</p>
+</div>
+</div>
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+<div class="size-12 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined text-[28px]">hourglass_empty</span>
+</div>
+<div>
+<p class="text-xs font-bold text-muted-slate uppercase tracking-wider">Pending Assessment</p>
+<p class="text-2xl font-bold text-dense-slate">8</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

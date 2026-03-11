@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TalentLens Recruiter Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0f1729",
+                        "accent": "#4f46e5",
+                        "success": "#10b981",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#14171e",
+                        "slate-card": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-primary flex flex-col shrink-0 border-r border-primary/10">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-accent rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">lens</span>
+</div>
+<div>
+<h1 class="text-white text-lg font-bold leading-none">TalentLens</h1>
+<p class="text-slate-400 text-xs mt-1">Recruiter Portal</p>
+</div>
+</div>
+<nav class="flex-1 px-4 mt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/10 text-white font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+                Candidates
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">work</span>
+                Job Postings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+                Analytics
+            </a>
+</nav>
+<div class="p-4 mt-auto border-t border-white/10">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                Settings
+            </a>
+<div class="mt-4 flex items-center gap-3 px-3 py-2">
+<div class="size-8 rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+<img alt="Recruiter Avatar" class="w-full h-full object-cover" data-alt="Professional headshot of an HR recruiter" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgMRoztlfOfz-sDNSasmddrEI_bbKK04KtJOan1Pg2PPOeJVd3HpH1EWHwnpj5y4cBDiC55eK9TW0iUsgTKxjBEWA27NEk8vqbXwA5dp2Dabu8WYEUfirdaz1Y7uT4KzfPHPhAl-gYwJ57hTuLEC-oVggefzIvQNiHjjE2sc6aw-txER_pBGxWfju77nffaGK-WPTLsK6WDV5kAYgYTKmT53sdiHR9NtLJAL6S3P4JCOtd_vJaYub3LflUqLWqYnlAEFQC0I2nVkc"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-xs font-semibold text-white truncate">Robert Fox</p>
+<p class="text-[10px] text-slate-400 truncate">Senior Recruiter</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Top Bar -->
+<header class="h-16 flex items-center justify-between px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0 sticky top-0 z-10">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-accent/50 placeholder:text-slate-500" placeholder="Search candidates, roles or skills..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
+<button class="flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-accent/90 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    New Job
+                </button>
+</div>
+</header>
+<div class="p-8 flex flex-col gap-8 max-w-[1200px] mx-auto w-full">
+<!-- Summary Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 text-sm font-medium">Total Candidates</span>
+<div class="p-2 bg-primary/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">groups</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-slate-900 dark:text-slate-100">1,284</h3>
+<span class="text-success text-xs font-semibold flex items-center">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12%
+                        </span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 text-sm font-medium">High Scoring</span>
+<div class="p-2 bg-success/10 rounded-lg text-success">
+<span class="material-symbols-outlined">verified</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-slate-900 dark:text-slate-100">142</h3>
+<span class="text-slate-400 text-xs font-medium">Top 10% talent</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 text-sm font-medium">Interviews Pending</span>
+<div class="p-2 bg-accent/10 rounded-lg text-accent">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-slate-900 dark:text-slate-100">28</h3>
+<span class="text-amber-500 text-xs font-semibold">4 overdue</span>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Top Candidates Leaderboard</h2>
+<p class="text-sm text-slate-500">Candidates filtered by AI Gemini match score.</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300">
+                            Export CSV
+                        </button>
+<button class="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Filter
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Candidate Name</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Role</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">AI Gemini Score</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Candidate" class="size-10 rounded-full border border-slate-200 dark:border-slate-700" data-alt="Portrait of John Doe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkjV0kCiUJQeSBiAsRq4XXRqjF3QJNy72VqvjC8yW4Jpj8ZPMCc_a1ltZ0m-0w_Xk7F1seFKpPWKJOVBf9lOaWI1wDvFc2uMcIE1sYl_Q9BBEsynT1j8v3n3YWHStXF3NKUTRyy32qhLBc36H62mLe_cx55p-5uhRNnKSjxsOBt_SjmxWuaZUsm1yX0qYTnzNXZnhq4-TDRR22XqwWMhwiS0zDWkFWaMJuO9kK3pXv90ej8VhwRhJNXSEVvurtr0aOZp7Z-Qc2tg8"/>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">John Doe</p>
+<p class="text-xs text-slate-500">j.doe@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-700 dark:text-slate-300">Senior Software Engineer</span>
+</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success text-sm font-bold">
+                                        95/100
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-xs font-medium text-slate-500">
+<span class="size-2 rounded-full bg-success"></span>
+                                        Available
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-accent text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-accent/90 shadow-sm shadow-accent/20">
+                                        Schedule
+                                    </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Candidate" class="size-10 rounded-full border border-slate-200 dark:border-slate-700" data-alt="Portrait of Jane Smith" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLcOxOdkXTMoxXgtqFRMl-Gpo5ccP_YKtAptlExJi7aQdm3lsvLoM3W75j55Gi3YUaIQlozA9Pu0UMMkD7HERwtLbN6Cb0-nPgSTeD4UKqH6KbJ7iul3PWXpfcNTRfC4gXijZpAXSweX3zaf6HS9aNq_ytRYQaogqzQZQPVGHkApcSTvXfqy5xwhThF7NeF_RM_l8UkQZ_Fzk-6rPInSIKSJePNt2HV3tIvBCq2oPLGIkygqO2wBZGIxt0xXxstM_chcas9iOG8V8"/>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Jane Smith</p>
+<p class="text-xs text-slate-500">jane.s@product.io</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-700 dark:text-slate-300">Product Manager</span>
+</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success text-sm font-bold">
+                                        92/100
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-xs font-medium text-slate-500">
+<span class="size-2 rounded-full bg-amber-400"></span>
+                                        On Hold
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-accent text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-accent/90 shadow-sm shadow-accent/20">
+                                        Schedule
+                                    </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Candidate" class="size-10 rounded-full border border-slate-200 dark:border-slate-700" data-alt="Portrait of Alex Rivera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDup_h92fRuqqWbBif2iiWch-NIKYBCoVkfOgjT6-GRoS-9W6gmQs7-xXhclfBEf5GW6Upfye7mUjZJIngKNThuxO3Qq5LDHuHB4r3uT-AREIcFhn_ryJiWGvFAh2wsYaLgZM_Z0FBYUUJW8GlEDhXvbEaBvpP99LhcZETSzVR6pzvz5OItsCAyF9iOz8q_agGCezRQ7elf6NEn31rsQIhveExOfQMxCKT8r2L-JJpsr0pB0PdFQdKk51g2Y9v08sCEiQnJ_Bs1OI"/>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Alex Rivera</p>
+<p class="text-xs text-slate-500">alex.riv@design.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-700 dark:text-slate-300">UX Designer</span>
+</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success text-sm font-bold">
+                                        89/100
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-xs font-medium text-slate-500">
+<span class="size-2 rounded-full bg-success"></span>
+                                        Available
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-accent text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-accent/90 shadow-sm shadow-accent/20">
+                                        Schedule
+                                    </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Candidate" class="size-10 rounded-full border border-slate-200 dark:border-slate-700" data-alt="Portrait of Sarah Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS859JTO_fLHtPhB0iqPgx29GREPrLK5X5k8s1mJ29sOdO2fGYEgJ9YSwWTo5Ef_ejPF2Z4wvQHaC7xxdwe24gpkxDM7xvo3cFc0UfraL3uU8a5PaOo0wwPGMLmv2L4NYVk6TVLmSV-dY0giKS-BieO8cOU88-46sXqWX3R_xIZQc84XTLWruNLNKMm0ZVJo5q6iaSls5ZDoHSBn6Cb03Mr7LYn-wTbrWZupyxNzZ47iIK1keUMCCvKo3o5uOqB9JRuF4oyeJLpqA"/>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Sarah Chen</p>
+<p class="text-xs text-slate-500">s.chen@tech.net</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-700 dark:text-slate-300">Backend Engineer</span>
+</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success text-sm font-bold">
+                                        86/100
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-xs font-medium text-slate-500">
+<span class="size-2 rounded-full bg-success"></span>
+                                        Available
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-accent text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-accent/90 shadow-sm shadow-accent/20">
+                                        Schedule
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-xs text-slate-500">Showing 1 to 4 of 142 high scoring candidates</p>
+<div class="flex gap-2">
+<button class="size-8 flex items-center justify-center rounded border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-50">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded border border-accent bg-accent/5 text-accent font-bold text-xs">1</button>
+<button class="size-8 flex items-center justify-center rounded border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-50 text-xs">2</button>
+<button class="size-8 flex items-center justify-center rounded border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-50">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Grid (Secondary info) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<h4 class="font-bold text-slate-900 dark:text-slate-100 mb-4">Upcoming Interviews</h4>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+<div class="size-10 rounded bg-white dark:bg-slate-700 flex flex-col items-center justify-center shadow-sm">
+<span class="text-[10px] font-bold text-accent uppercase">Oct</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">12</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Interview with Jane Smith</p>
+<p class="text-xs text-slate-500">10:30 AM • Product Manager Role</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</div>
+<div class="flex items-center gap-4 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-colors cursor-pointer">
+<div class="size-10 rounded bg-white dark:bg-slate-700 flex flex-col items-center justify-center shadow-sm">
+<span class="text-[10px] font-bold text-accent uppercase">Oct</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">14</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Tech Assessment: John Doe</p>
+<p class="text-xs text-slate-500">02:00 PM • Backend Team</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</div>
+</div>
+<button class="w-full mt-4 py-2 text-accent text-sm font-semibold hover:bg-accent/5 rounded-lg transition-colors">
+                        View All Interviews
+                    </button>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<h4 class="font-bold text-slate-900 dark:text-slate-100 mb-4">Recent Activity</h4>
+<div class="space-y-6 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-px before:bg-slate-200 dark:before:bg-slate-800">
+<div class="relative flex gap-4 pl-8">
+<div class="absolute left-0 top-0 size-9 rounded-full bg-success flex items-center justify-center text-white ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div>
+<p class="text-sm text-slate-900 dark:text-slate-100"><span class="font-semibold">AI Screening complete</span> for 12 new applicants</p>
+<p class="text-xs text-slate-500">2 hours ago</p>
+</div>
+</div>
+<div class="relative flex gap-4 pl-8">
+<div class="absolute left-0 top-0 size-9 rounded-full bg-accent flex items-center justify-center text-white ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+</div>
+<div>
+<p class="text-sm text-slate-900 dark:text-slate-100"><span class="font-semibold">Email sent</span> to Alex Rivera</p>
+<p class="text-xs text-slate-500">5 hours ago</p>
+</div>
+</div>
+<div class="relative flex gap-4 pl-8">
+<div class="absolute left-0 top-0 size-9 rounded-full bg-slate-400 flex items-center justify-center text-white ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+</div>
+<div>
+<p class="text-sm text-slate-900 dark:text-slate-100"><span class="font-semibold">New Job Posting</span> created for Senior UX</p>
+<p class="text-xs text-slate-500">Yesterday</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

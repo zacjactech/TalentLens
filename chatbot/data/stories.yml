@@ -1,0 +1,26 @@
+version: "3.1"
+
+stories:
+- story: happy path interview
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: affirm
+  - action: utter_ask_resume
+  - intent: provide_resume
+  - action: action_upload_resume
+  - action: utter_ask_experience
+  - intent: provide_info
+  - action: action_save_answer
+  - action: utter_ask_stability
+  - intent: provide_info
+  - action: action_save_answer
+  - action: utter_ask_communication
+  - intent: provide_info
+  - action: action_save_answer
+  - action: utter_ask_role_specific
+  - intent: provide_info
+  - action: action_save_answer
+  - action: action_measure_typing
+  - action: utter_goodbye
+  - action: action_complete_interview

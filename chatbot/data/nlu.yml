@@ -1,0 +1,59 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - good morning
+    - let's start
+    - i am ready
+    - begin interview
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you later
+    - catch you later
+    - I'm done
+
+- intent: affirm
+  examples: |
+    - yes
+    - yeah
+    - absolutely
+    - sure
+    - ok
+    - of course
+
+- intent: deny
+  examples: |
+    - no
+    - never
+    - i don't think so
+    - not really
+
+- intent: provide_info
+  examples: |
+    - My experience is mostly in backend systems like Node.js and Python.
+    - I have worked for 5 years in fintech.
+    - I used microservices architecture with Kubernetes.
+    - It was challenging but I collaborated with the product team.
+    - I usually prioritize urgent bugs first and communicate delays.
+    - We used React for the frontend and Django for the backend.
+    - I prefer PostgreSQL because of its relational integrity and JSON support.
+    
+- intent: provide_resume
+  examples: |
+    - Here is my resume: https://example.com/resume.pdf
+    - I uploaded my resume.
+    - My resume is attached.
+
+- intent: out_of_scope
+  examples: |
+    - who won the super bowl?
+    - what is the weather like?
+    - tell me a joke
+    - how much is the salary?

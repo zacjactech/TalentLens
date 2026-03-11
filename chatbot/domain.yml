@@ -1,0 +1,67 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - provide_info
+  - provide_resume
+  - out_of_scope
+
+entities:
+  - candidate_name
+  - email
+  - years_experience
+
+slots:
+  candidate_name:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: candidate_name
+  email:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: email
+  interview_session_id:
+    type: text
+    mappings:
+    - type: custom
+  current_question:
+    type: text
+    mappings:
+    - type: custom
+
+responses:
+  utter_greet:
+  - text: "Hello! I am the TalentLens AI Recruiter. I will conduct your initial screening interview. Are you ready to begin?"
+
+  utter_goodbye:
+  - text: "Thank you for your time! We have recorded your responses and evaluated your typing speed. We will be in touch shortly regarding the next steps."
+
+  utter_ask_resume:
+  - text: "Before we dive into the interview questions, could you please provide a link to your resume or paste its text?"
+
+  utter_ask_experience:
+  - text: "Great. Let's start with your background. Can you describe your most impactful professional experience?"
+
+  utter_ask_stability:
+  - text: "How do you handle high-pressure situations or tight deadlines? Please share a specific example."
+
+  utter_ask_communication:
+  - text: "Describe a time when you had to explain a complex technical concept to a non-technical stakeholder."
+
+  utter_ask_role_specific:
+  - text: "What architectural patterns or specific tools do you prefer when building a scalable backend system, and why?"
+
+actions:
+  - action_save_answer
+  - action_measure_typing
+  - action_complete_interview
+  - action_upload_resume
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
