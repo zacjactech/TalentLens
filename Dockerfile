@@ -45,7 +45,23 @@ WORKDIR /app
 RUN mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/log/supervisor /var/run/postgresql /var/run/redis && \
     chmod -R 777 /data /var/log /var/run /var/lib/redis
 
-# Copy project files
+# ---- Dependency Phase (Caching Optimized) ----
+# Copy only requirements first to leverage Docker layer caching
+COPY backend/requirements.txt /app/backend/
+COPY chatbot/requirements.txt /app/chatbot/
+
+# ---- Backend venv (pydantic v2) ----
+RUN python -m venv /opt/venv/backend && \
+    /opt/venv/backend/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/venv/backend/bin/pip install --no-cache-dir -r /app/backend/requirements.txt
+
+# ---- Chatbot venv (pydantic v1 / Rasa) ----
+RUN python -m venv /opt/venv/chatbot && \
+    /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/venv/chatbot/bin/pip install --no-cache-dir -r /app/chatbot/requirements.txt
+
+# ---- App Phase ----
+# Copy the rest of the application code
 COPY . .
 
 # Build Frontend
@@ -56,25 +72,17 @@ RUN export VITE_API_URL=/api/v1 && \
     mkdir -p /var/www/html && \
     cp -r dist/* /var/www/html/
 
-# ---- Backend venv (pydantic v2) ----
-RUN python -m venv /opt/venv/backend
-RUN /opt/venv/backend/bin/pip install --no-cache-dir -r /app/backend/requirements.txt
-
-# ---- Chatbot venv (pydantic v1 / Rasa) ----
-RUN python -m venv /opt/venv/chatbot
-RUN /opt/venv/chatbot/bin/pip install --no-cache-dir -r /app/chatbot/requirements.txt
-
 # Ensure postgres has correct permissions before switching user
 RUN chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql && \
     chmod -R 700 /var/lib/postgresql
 
-# Setup database and run migrations using the backend venv
+# Setup database and run migrations using the backend venv EXPLICITLY
 USER postgres
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';" && \
     createdb -O talentlens talentlens_db && \
     cd /app/backend && \
-    PYTHONPATH=/app/backend /opt/venv/backend/bin/alembic upgrade head
+    PYTHONPATH=/app/backend /opt/venv/backend/bin/python -m alembic upgrade head
 USER root
 
 # Configure Nginx and Supervisor
@@ -91,3 +99,4 @@ RUN touch /var/log/supervisord.log /var/run/supervisord.pid && \
 EXPOSE 7860
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+

@@ -1,0 +1,28 @@
+# Local python environments
+venv/
+.venv/
+env/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Logs and databases
+*.log
+*.sqlite
+data/
+postgresql_data/
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
