@@ -1,4 +1,5 @@
 # Use a modern, light Python base image
+# Force rebuild: 2026-03-11 10:40
 FROM python:3.10-slim-bookworm
 
 # Skip interactive prompts

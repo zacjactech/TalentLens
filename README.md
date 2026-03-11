@@ -4,6 +4,8 @@ emoji: 😻
 colorFrom: gray
 colorTo: indigo
 sdk: docker
+app_file: Dockerfile
+app_port: 7860
 pinned: false
 license: mit
 short_description: TalentLens is a production-grade AI-powered HR Interview
