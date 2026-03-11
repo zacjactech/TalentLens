@@ -25,6 +25,10 @@ echo "Running database migrations..."
 cd /app/backend
 PYTHONPATH=/app/backend PYTHONNOUSERSITE=1 /opt/venv/backend/bin/python -m alembic upgrade head
 
+# Stop PostgreSQL to let Supervisor manage it (in foreground)
+echo "Stopping temporary PostgreSQL..."
+/etc/init.d/postgresql stop
+
 # Start Supervisor
 echo "Starting Supervisord..."
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
