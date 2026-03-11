@@ -31,6 +31,14 @@ app.add_middleware(
 
 app.include_router(api_router, prefix="/api/v1")
 
+@app.get("/api/v1/info")
+def info_test():
+    return {"message": "Info route is reachable", "prefix": "/api/v1"}
+
+@app.get("/debug")
+def debug_root():
+    return {"message": "Backend is alive", "routes": [route.path for route in app.routes]}
+
 Instrumentator().instrument(app).expose(app)
 
 @app.get("/health")
