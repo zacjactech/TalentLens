@@ -14,8 +14,30 @@ def get_logs():
     try:
         if os.path.exists("error.log"):
             with open("error.log", "r") as f:
-                return {"logs": f.read()}
+                content = f.readlines()
+                return {"logs": "".join(content[-200:])}
         return {"logs": "No logs found"}
+    except Exception as e:
+        return {"error": str(e)}
+
+@api_router.get("/diagnostics")
+def get_diagnostics():
+    try:
+        import bcrypt
+        import passlib
+        try:
+            import passlib.handlers.bcrypt
+            passlib_bcrypt = "available"
+        except ImportError:
+            passlib_bcrypt = "missing"
+        
+        return {
+            "bcrypt_version": getattr(bcrypt, "__version__", "unknown"),
+            "passlib_version": getattr(passlib, "__version__", "unknown"),
+            "passlib_bcrypt_handler": passlib_bcrypt,
+            "cwd": os.getcwd(),
+            "files": os.listdir(".")
+        }
     except Exception as e:
         return {"error": str(e)}
 
