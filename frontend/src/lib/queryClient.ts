@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { get, set, del } from 'idb-keyval';
-import { PersistedClient, Persister } from '@tanstack/react-query-persist-client';
+import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client';
 
 // Create the standard React Query client
 export const queryClient = new QueryClient({
