@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+import os
 from app.api.endpoints import auth, candidates, interviews, admin, files, jobs, settings
 
 api_router = APIRouter()
@@ -7,6 +8,16 @@ api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 @api_router.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+@api_router.get("/logs")
+def get_logs():
+    try:
+        if os.path.exists("error.log"):
+            with open("error.log", "r") as f:
+                return {"logs": f.read()}
+        return {"logs": "No logs found"}
+    except Exception as e:
+        return {"error": str(e)}
 
 api_router.include_router(candidates.router, prefix="/candidates", tags=["candidates"])
 api_router.include_router(interviews.router, prefix="/interviews", tags=["interviews"])
