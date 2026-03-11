@@ -12,6 +12,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
+@app.on_event("startup")
+def list_routes():
+    print("--- REGISTERED ROUTES ---")
+    for route in app.routes:
+        print(f"Path: {route.path}")
+    print("-------------------------")
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     tb = traceback.format_exc()
