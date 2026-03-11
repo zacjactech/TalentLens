@@ -37,20 +37,33 @@ def get_logs():
 def get_diagnostics():
     try:
         import bcrypt
+        env_vars = {k: (v[:10] + "..." if len(v) > 10 else v) for k, v in os.environ.items() 
+                    if any(x in k for x in ["DATABASE", "POSTGRES", "SUPABASE", "REDIS", "MINIO"])}
+        
         db_url = os.getenv("DATABASE_URL", "MISSING")
         masked_db_url = db_url[:20] + "..." if db_url != "MISSING" else "MISSING"
         
         db_host = "N/A"
         if "@" in db_url:
             db_host = db_url.split("@")[-1].split("/")[0]
-        
+            
+        # Search for any .env files
+        env_files = []
+        for root, dirs, files in os.walk("/app"):
+            if ".env" in files:
+                env_files.append(os.path.join(root, ".env"))
+            for f in files:
+                if f.startswith(".env"):
+                    env_files.append(os.path.join(root, f))
+
         return {
             "database_url_status": "present" if db_url != "MISSING" else "MISSING",
             "database_url_preview": masked_db_url,
             "database_host": db_host,
+            "relevant_env_vars": env_vars,
+            "env_files_found": env_files,
             "bcrypt_version": getattr(bcrypt, "__version__", "unknown"),
             "cwd": os.getcwd(),
-            "files": os.listdir(".")
         }
     except Exception as e:
         return {"error": str(e)}
