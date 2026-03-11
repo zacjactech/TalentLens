@@ -95,10 +95,11 @@ RUN /etc/init.d/postgresql start && \
     cd /app/backend && \
     echo "MIGRATION DIAGNOSTICS:" && \
     PYTHONPATH=/app/backend PYTHONNOUSERSITE=1 /opt/venv/backend/bin/python -m alembic upgrade head
-USER root
-
 # Configure Nginx and Supervisor
-RUN rm -f /etc/nginx/sites-enabled/default
+USER root
+RUN mkdir -p /etc/nginx/sites-enabled && \
+    rm -f /etc/nginx/sites-enabled/default && \
+    echo "Nginx directory prepared"
 COPY nginx.conf /etc/nginx/sites-enabled/talentlens.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
