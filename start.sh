@@ -1,10 +1,18 @@
 #!/bin/bash
 
+# Load environment variables from .env if present (prevents local DB fallback if secret isn't set yet)
+if [ -f /app/.env ]; then
+    echo "Loading environment from /app/.env"
+    export $(grep -v '^#' /app/.env | sed 's/ *= */=/g' | xargs)
+fi
+
 # Check if using external database
 USE_EXTERNAL_DB=false
 if [[ "$DATABASE_URL" == *"supabase.com"* ]] || [[ "$DATABASE_URL" == *"pooler.supabase.com"* ]]; then
     USE_EXTERNAL_DB=true
     echo "Using external database: $DATABASE_URL"
+else
+    echo "DATABASE_URL does not appear to be external. Falling back to local PostgreSQL."
 fi
 
 if [ "$USE_EXTERNAL_DB" = false ]; then
