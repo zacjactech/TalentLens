@@ -15,7 +15,7 @@ def get_logs():
         if os.path.exists("error.log"):
             with open("error.log", "r") as f:
                 content = f.readlines()
-                return {"logs": "".join(content[-200:])}
+                return {"logs": "".join(content[-500:])}
         return {"logs": "No logs found"}
     except Exception as e:
         return {"error": str(e)}
