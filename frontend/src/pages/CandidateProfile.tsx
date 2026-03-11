@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useCandidate, useCandidateTranscript } from '../hooks/useCandidateQueries';
+import type { InterviewMessage } from '../types';
 
 export function CandidateProfile() {
   const { id } = useParams<{ id: string }>();
@@ -43,7 +44,7 @@ export function CandidateProfile() {
             </div>
             <div className="ml-8 px-6 py-2 bg-success/5 rounded-xl border border-success/20">
               <p className="text-[10px] uppercase tracking-wider font-bold text-success">AI Match Score</p>
-              <p className="text-2xl font-black text-success">{candidate.score?.total_score || 0}/100</p>
+              <p className="text-2xl font-black text-success">{candidate.score?.overall_score || 0}/100</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -88,8 +89,8 @@ export function CandidateProfile() {
                 { label: 'Experience Fit', value: candidate.score?.experience_fit, max: 30 },
                 { label: 'Career Stability', value: candidate.score?.career_stability, max: 20 },
                 { label: 'Communication Quality', value: candidate.score?.communication_quality, max: 20 },
-                { label: 'Role Specific', value: candidate.score?.role_specific, max: 15 },
-              ].map((item) => (
+                { label: 'Typing & Role Specific', value: (candidate.score?.typing_test || 0) + (candidate.score?.role_specific || 0), max: 30 },
+              ].map((item: { label: string, value: number | undefined, max: number }) => (
                 <div key={item.label} className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="font-medium text-slate-600 dark:text-slate-300">{item.label}</span>
@@ -129,7 +130,9 @@ export function CandidateProfile() {
               <span className="material-symbols-outlined text-primary">chat</span> Chatbot Interview Transcript
             </h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-slate-500">Duration: N/A</span>
+              <span className="text-xs font-medium text-slate-500">
+                Duration: {candidate.sessions?.find(s => s.status === 'completed')?.duration_minutes ? `${candidate.sessions.find(s => s.status === 'completed')?.duration_minutes}m` : 'N/A'}
+              </span>
               <div className="h-4 w-px bg-slate-300 dark:bg-slate-700"></div>
               <span className="text-xs font-medium text-slate-500">Completed: {new Date(candidate.created_at).toLocaleDateString()}</span>
             </div>
@@ -142,7 +145,7 @@ export function CandidateProfile() {
                 <p>No interview messages recorded yet.</p>
               </div>
             ) : (
-              (transcript || []).map((msg: any, idx: number) => (
+              (transcript || []).map((msg: InterviewMessage, idx: number) => (
                 <div key={idx} className="space-y-6">
                   {/* Message AI (Question) */}
                   <div className="flex gap-4 max-w-[85%]">
@@ -178,7 +181,7 @@ export function CandidateProfile() {
             <button
               onClick={() => {
                 const title = `Interview Transcript: ${candidate.first_name} ${candidate.last_name}\n\n`;
-                const text = (transcript || []).map((m: any) => `TalentLens Assistant:\n${m.question_text || `Question about ${m.question_category}`}\n\n${candidate.first_name}:\n${m.answer_text}\n\n`).join('\n');
+                const text = (transcript || []).map((m: InterviewMessage) => `TalentLens Assistant:\n${m.question_text || `Question about ${m.question_category}`}\n\n${candidate.first_name}:\n${m.answer_text}\n\n`).join('\n');
                 const blob = new Blob([title + text], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');

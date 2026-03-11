@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCandidates } from '../hooks/useCandidateQueries';
 import { useCandidateStats } from '../hooks/useAdminQueries';
+import type { Candidate } from '../types';
 
 export function CandidateList() {
   // Filtering & Pagination State
@@ -108,7 +109,7 @@ export function CandidateList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
-              {(candidates || []).map((candidate: any) => (
+              {(candidates || []).map((candidate: Candidate) => (
                 <tr key={candidate.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
@@ -125,7 +126,7 @@ export function CandidateList() {
                     <span className="text-sm text-slate-700 dark:text-slate-300">{candidate.target_role || "Unspecified"}</span>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-sm text-slate-700 dark:text-slate-300">N/A</span>
+                    <span className="text-sm text-slate-700 dark:text-slate-300">{candidate.years_of_experience ?? 0} yrs</span>
                   </td>
                   <td className="py-4 px-4">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${(candidate.score?.overall_score || 0) >= 80

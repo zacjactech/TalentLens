@@ -22,6 +22,7 @@ class InterviewSessionResponse(InterviewSessionCreate):
     id: int
     start_time: datetime
     end_time: Optional[datetime]
+    duration_minutes: Optional[int]
     status: str
 
 class TypingTestCreate(BaseModel):

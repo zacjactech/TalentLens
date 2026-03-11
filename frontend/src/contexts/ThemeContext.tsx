@@ -33,6 +33,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     useEffect(() => {
         // Init theme from settings or cache
         if (settings?.theme) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setThemeState(settings.theme);
             localStorage.setItem('theme', settings.theme);
         } else {
@@ -92,6 +93,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => {
     const context = useContext(ThemeContext);
     if (context === undefined) {

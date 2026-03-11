@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import apiService from '../services/api';
+import type { User } from '../types';
 
 interface AuthContextType {
     token: string | null;
-    user: any | null;
+    user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
@@ -15,7 +16,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<any | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // Restore session on mount

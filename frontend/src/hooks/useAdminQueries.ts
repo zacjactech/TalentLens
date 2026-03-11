@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiService } from '../services/api';
+import type { Analytics, Candidate, AdminStats, Activity, Interview } from '../types';
 
 export const adminKeys = {
     all: ['admin'] as const,
@@ -11,22 +12,22 @@ export const adminKeys = {
     topCandidates: (limit: number) => [...adminKeys.all, 'topCandidates', limit] as const,
 };
 
-export const useAdminStats = () => useQuery({
+export const useAdminStats = () => useQuery<AdminStats>({
     queryKey: adminKeys.stats(),
     queryFn: apiService.getStats,
 });
 
-export const useRecentActivity = () => useQuery({
+export const useRecentActivity = () => useQuery<Activity[]>({
     queryKey: adminKeys.recentActivity(),
     queryFn: apiService.getRecentActivity,
 });
 
-export const useUpcomingInterviews = () => useQuery({
+export const useUpcomingInterviews = () => useQuery<Interview[]>({
     queryKey: adminKeys.upcomingInterviews(),
     queryFn: apiService.getUpcomingInterviews,
 });
 
-export const useAnalytics = () => useQuery({
+export const useAnalytics = () => useQuery<Analytics>({
     queryKey: adminKeys.analytics(),
     queryFn: apiService.getAnalytics,
 });
@@ -36,7 +37,7 @@ export const useCandidateStats = () => useQuery({
     queryFn: apiService.getCandidateStats,
 });
 
-export const useTopCandidates = (limit: number = 10) => useQuery({
+export const useTopCandidates = (limit: number = 10) => useQuery<Candidate[]>({
     queryKey: adminKeys.topCandidates(limit),
     queryFn: () => apiService.getTopCandidates(limit),
 });

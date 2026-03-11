@@ -1,5 +1,6 @@
 import { useTheme } from '../contexts/ThemeContext';
 import { useAnalytics } from '../hooks/useAdminQueries';
+import type { Analytics } from '../types';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -44,7 +45,7 @@ export function Analytics() {
             <div className="p-8 flex items-center justify-center h-full">
                 <div className="text-center">
                     <span className="material-symbols-outlined text-4xl text-red-500 mb-2">error</span>
-                    <p className="text-slate-600 font-medium">{(error as any)?.message || "No data available"}</p>
+                    <p className="text-slate-600 font-medium">{(error as Error).message || "No data available"}</p>
                 </div>
             </div>
         );
@@ -107,10 +108,10 @@ export function Analytics() {
                     <div className="w-full flex-1">
                         <Bar
                             data={{
-                                labels: analytics.hiring_velocity.map((v: any) => v.month),
+                                labels: analytics.hiring_velocity.map((v) => v.month),
                                 datasets: [{
                                     label: 'Hires',
-                                    data: analytics.hiring_velocity.map((v: any) => v.hires),
+                                    data: analytics.hiring_velocity.map((v) => v.hires),
                                     backgroundColor: '#0ea5e9', // primary
                                     borderRadius: 4
                                 }]
@@ -142,9 +143,9 @@ export function Analytics() {
                     <div className="w-full flex-1">
                         <Doughnut
                             data={{
-                                labels: analytics.source_distribution?.map((v: any) => v.source) || ['LinkedIn', 'Direct', 'Referral'],
+                                labels: analytics.source_distribution?.map((v) => v.source) || ['LinkedIn', 'Direct', 'Referral'],
                                 datasets: [{
-                                    data: analytics.source_distribution?.map((v: any) => v.count) || [10, 15, 5],
+                                    data: analytics.source_distribution?.map((v) => v.count) || [10, 15, 5],
                                     backgroundColor: [
                                         '#0ea5e9', // primary
                                         '#22c55e', // success

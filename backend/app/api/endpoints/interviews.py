@@ -92,6 +92,11 @@ def complete_interview(
         
     session.status = "completed"
     session.end_time = datetime.now(timezone.utc)
+    if session.start_time:
+        # start_time might not have timezone info if coming from default
+        start = session.start_time.replace(tzinfo=timezone.utc) if session.start_time.tzinfo is None else session.start_time
+        diff = session.end_time - start
+        session.duration_minutes = int(diff.total_seconds() / 60)
     db.commit()
     
     # Trigger Celery task here to generate score using Gemini
@@ -122,8 +127,8 @@ def schedule_candidate_interview(
     # Save the schedule
     schedule = models.InterviewSchedule(
         candidate_id=candidate.id,
-        interview_time=start_time,
-        meet_link=meet_link
+        scheduled_at=start_time,
+        meeting_link=meet_link
     )
     db.add(schedule)
     db.commit()
@@ -138,13 +143,22 @@ def get_interviews(
     sessions = db.query(models.InterviewSession).all()
     return sessions
 
-@router.get("/{session_id}/transcript", response_model=List[schemas.InterviewAnswerResponse])
-def get_interview_transcript(
+@router.get("/candidate/{candidate_id}/transcript", response_model=List[schemas.InterviewAnswerResponse])
+def get_candidate_transcript(
     *,
     db: Session = Depends(deps.get_db),
-    session_id: int,
+    candidate_id: int,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
-    """Get the transcript for a specific interview session."""
-    answers = db.query(models.InterviewAnswer).filter(models.InterviewAnswer.session_id == session_id).order_by(models.InterviewAnswer.created_at.asc()).all()
+    """Get the latest transcript for a specific candidate."""
+    session = db.query(models.InterviewSession).filter(
+        models.InterviewSession.candidate_id == candidate_id
+    ).order_by(models.InterviewSession.start_time.desc()).first()
+    
+    if not session:
+        return []
+        
+    answers = db.query(models.InterviewAnswer).filter(
+        models.InterviewAnswer.session_id == session.id
+    ).order_by(models.InterviewAnswer.created_at.asc()).all()
     return answers

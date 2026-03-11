@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useJobs, useCreateJob, useUpdateJob } from '../hooks/useJobQueries';
+import type { Job } from '../types';
 
 export function JobPostings() {
     const { data: jobs = [], isLoading: loading, error } = useJobs();
@@ -8,13 +9,21 @@ export function JobPostings() {
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingJob, setEditingJob] = useState<any>(null);
-    const [formData, setFormData] = useState({
+    const [editingJob, setEditingJob] = useState<Job | null>(null);
+    const [formData, setFormData] = useState<{
+        title: string;
+        department: string;
+        location: string;
+        type: string;
+        status: 'Active' | 'Draft' | 'Closed';
+        description: string;
+        requirements: string;
+    }>({
         title: '',
         department: '',
         location: '',
         type: 'Full-time',
-        status: 'Active',
+        status: 'Active' as const,
         description: '',
         requirements: ''
     });
@@ -25,7 +34,7 @@ export function JobPostings() {
         setIsModalOpen(true);
     };
 
-    const openEditModal = (job: any) => {
+    const openEditModal = (job: Job) => {
         setEditingJob(job);
         setFormData({
             title: job.title || '',
@@ -66,7 +75,7 @@ export function JobPostings() {
             <div className="p-8 flex items-center justify-center h-full">
                 <div className="text-center">
                     <span className="material-symbols-outlined text-4xl text-red-500 mb-2">error</span>
-                    <p className="text-slate-600 font-medium">{(error as any)?.message || "Failed to load jobs"}</p>
+                    <p className="text-slate-600 font-medium">{(error as Error).message || "Failed to load jobs"}</p>
                 </div>
             </div>
         );
@@ -106,7 +115,7 @@ export function JobPostings() {
                                     </td>
                                 </tr>
                             ) : (
-                                jobs.map((job: any) => (
+                                jobs.map((job: Job) => (
                                     <tr key={job.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                                         <td className="py-4 px-4">
                                             <p className="font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
@@ -165,7 +174,7 @@ export function JobPostings() {
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
-                                    <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-200">
+                                    <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value as 'Active' | 'Draft' | 'Closed' })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-200">
                                         <option>Active</option>
                                         <option>Draft</option>
                                         <option>Closed</option>

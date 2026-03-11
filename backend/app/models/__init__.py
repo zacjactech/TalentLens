@@ -49,6 +49,8 @@ class Candidate(Base):
     phone = Column(String)
     target_role = Column(String, index=True)
     status = Column(String, default="pending")  # pending, interviewed, shortlisted, rejected
+    years_of_experience = Column(Integer, default=0)
+    source = Column(String, default="Direct")
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -101,6 +103,7 @@ class InterviewSession(Base):
     status = Column(String, default="in_progress", index=True) # in_progress, completed, abandoned
     start_time = Column(DateTime, default=datetime.utcnow)
     end_time = Column(DateTime, nullable=True)
+    duration_minutes = Column(Integer, nullable=True)
     
     candidate = relationship("Candidate", back_populates="sessions")
     answers = relationship("InterviewAnswer", back_populates="session")

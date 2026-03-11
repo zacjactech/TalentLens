@@ -34,8 +34,9 @@ export function SignUpPage() {
             // For better UX, let's just log them in immediately:
             await login(email, password);
             navigate('/');
-        } catch (err: any) {
-            const errorMessage = err.response?.data?.detail;
+        } catch (err: unknown) {
+            const errorResponse = err as { response?: { data?: { detail?: string } } };
+            const errorMessage = errorResponse.response?.data?.detail;
             setError(typeof errorMessage === 'string' ? errorMessage : 'Something went wrong. Please try again.');
         } finally {
             setIsLoading(false);

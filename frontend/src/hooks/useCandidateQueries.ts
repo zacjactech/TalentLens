@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiService } from '../services/api';
+import type { Candidate, InterviewMessage } from '../types';
 
 export const candidateKeys = {
     all: ['candidates'] as const,
@@ -13,14 +14,14 @@ export const candidateKeys = {
 };
 
 export const useCandidates = (skip = 0, limit = 10, role?: string, status?: string, search?: string) => {
-    return useQuery({
+    return useQuery<Candidate[]>({
         queryKey: candidateKeys.list(skip, limit, role, status, search),
         queryFn: () => apiService.getAllCandidates(skip, limit, role, status, search),
     });
 };
 
 export const useCandidate = (id: string) => {
-    return useQuery({
+    return useQuery<Candidate>({
         queryKey: candidateKeys.detail(id),
         queryFn: () => apiService.getCandidateById(id),
         enabled: !!id,
@@ -28,9 +29,9 @@ export const useCandidate = (id: string) => {
 };
 
 export const useCandidateTranscript = (id: number) => {
-    return useQuery({
+    return useQuery<InterviewMessage[]>({
         queryKey: candidateKeys.transcript(id),
-        queryFn: () => apiService.getTranscript(id),
-        enabled: !!id,
+        queryFn: () => apiService.getCandidateTranscript(id),
+        enabled: id > 0,
     });
 };

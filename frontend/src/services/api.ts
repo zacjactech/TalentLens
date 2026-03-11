@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { Analytics, Candidate, Job, User, Interview, Activity, InterviewMessage, AdminStats } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
 
@@ -39,7 +40,7 @@ export const apiService = {
     return response.data;
   },
 
-  getMe: async () => {
+  getMe: async (): Promise<User> => {
     const response = await apiClient.get('/auth/me');
     return response.data;
   },
@@ -55,49 +56,49 @@ export const apiService = {
     return response.data;
   },
 
-  updateSettings: async (settingsData: any) => {
+  updateSettings: async (settingsData: Record<string, unknown>) => {
     const response = await apiClient.put('/settings', settingsData);
     return response.data;
   },
 
   // Candidate Endpoints
-  getTopCandidates: async (limit = 10) => {
+  getTopCandidates: async (limit = 10): Promise<Candidate[]> => {
     const response = await apiClient.get('/admin/top-candidates', {
       params: { limit }
     });
     return response.data;
   },
 
-  getAllCandidates: async (skip = 0, limit = 10, role?: string, status?: string, search?: string) => {
+  getAllCandidates: async (skip = 0, limit = 10, role?: string, status?: string, search?: string): Promise<Candidate[]> => {
     const response = await apiClient.get('/candidates', {
       params: { skip, limit, role, status, search }
     });
     return response.data;
   },
 
-  getCandidateById: async (id: string) => {
+  getCandidateById: async (id: string): Promise<Candidate> => {
     const response = await apiClient.get(`/candidates/${id}`);
     return response.data;
   },
 
   // Admin/Stats Endpoints
-  getStats: async () => {
+  getStats: async (): Promise<AdminStats> => {
     const response = await apiClient.get('/admin/stats');
     return response.data;
   },
 
-  getRecentActivity: async () => {
+  getRecentActivity: async (): Promise<Activity[]> => {
     const response = await apiClient.get('/admin/recent-activity');
     return response.data;
   },
 
-  getUpcomingInterviews: async () => {
+  getUpcomingInterviews: async (): Promise<Interview[]> => {
     const response = await apiClient.get('/admin/upcoming-interviews');
     return response.data;
   },
 
   // Interview Endpoints
-  getInterviews: async () => {
+  getInterviews: async (): Promise<Interview[]> => {
     const response = await apiClient.get('/interviews');
     return response.data;
   },
@@ -105,8 +106,12 @@ export const apiService = {
     const response = await apiClient.get(`/interviews/${sessionId}/transcript`);
     return response.data;
   },
+  getCandidateTranscript: async (candidateId: number): Promise<InterviewMessage[]> => {
+    const response = await apiClient.get(`/interviews/candidate/${candidateId}/transcript`);
+    return response.data;
+  },
 
-  getAnalytics: async () => {
+  getAnalytics: async (): Promise<Analytics> => {
     const response = await apiClient.get('/admin/analytics');
     return response.data;
   },
@@ -116,18 +121,38 @@ export const apiService = {
     return response.data;
   },
 
+  // Interview Endpoints
+  startInterview: async (candidateId: number) => {
+    const response = await apiClient.post('/interviews/start', { candidate_id: candidateId });
+    return response.data;
+  },
+
+  submitTypingTest: async (sessionId: number, wpm: number, accuracy: number) => {
+    const response = await apiClient.post('/interviews/typing-test', {
+      session_id: sessionId,
+      wpm,
+      accuracy
+    });
+    return response.data;
+  },
+
+  completeInterview: async (sessionId: number) => {
+    const response = await apiClient.post(`/interviews/${sessionId}/complete`);
+    return response.data;
+  },
+
   // Jobs Endpoints
-  getJobs: async () => {
+  getJobs: async (): Promise<Job[]> => {
     const response = await apiClient.get('/jobs');
     return response.data;
   },
 
-  createJob: async (jobData: any) => {
+  createJob: async (jobData: Partial<Job>) => {
     const response = await apiClient.post('/jobs', jobData);
     return response.data;
   },
 
-  updateJob: async (id: number, jobData: any) => {
+  updateJob: async (id: number, jobData: Partial<Job>) => {
     const response = await apiClient.put(`/jobs/${id}`, jobData);
     return response.data;
   },

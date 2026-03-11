@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { apiService } from '../services/api';
 import axios from 'axios';
 
 // Directly talk to Rasa REST channel
@@ -7,10 +8,7 @@ import axios from 'axios';
 const RASA_URL = '/rasa/webhooks/rest/webhook';
 
 
-interface Message {
-    sender: 'bot' | 'user';
-    text: string;
-}
+import type { InterviewMessage as Message } from '../types';
 
 export function InterviewChat() {
     const { id } = useParams<{ id: string }>(); // This serves as the session_id
@@ -59,12 +57,13 @@ export function InterviewChat() {
         // Sync metrics
         const metrics = calculateVariables();
         try {
-            await axios.post('/api/v1/interviews/typing-test', {
-
-                session_id: parseInt(id),
-                wpm: metrics.wpm,
-                accuracy: metrics.accuracy
-            });
+            if (id) {
+                await apiService.submitTypingTest(
+                    parseInt(id),
+                    metrics.wpm,
+                    metrics.accuracy
+                );
+            }
         } catch (e) {
             console.error("Failed to sync metrics", e);
         }
@@ -75,7 +74,7 @@ export function InterviewChat() {
                 message: userMsg
             });
 
-            const botMessages = resp.data.map((m: any) => ({
+            const botMessages = resp.data.map((m: { text: string }) => ({
                 sender: 'bot',
                 text: m.text
             }));

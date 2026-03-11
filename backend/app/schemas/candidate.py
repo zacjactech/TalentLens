@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import List, Optional
 from datetime import datetime
+from .interview import InterviewSessionResponse
 
 # Shared properties
 class CandidateBase(BaseModel):
@@ -10,6 +11,8 @@ class CandidateBase(BaseModel):
     phone: Optional[str] = None
     target_role: Optional[str] = None
     status: Optional[str] = "new"
+    years_of_experience: Optional[int] = 0
+    source: Optional[str] = "Direct"
 
 # Properties to receive via API on creation
 class CandidateCreate(CandidateBase):
@@ -23,6 +26,8 @@ class CandidateUpdate(BaseModel):
     phone: Optional[str] = None
     target_role: Optional[str] = None
     status: Optional[str] = None
+    years_of_experience: Optional[int] = None
+    source: Optional[str] = None
 
 class CandidateProfile(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -52,3 +57,4 @@ class CandidateInDBBase(CandidateBase):
 class Candidate(CandidateInDBBase):
     profile: Optional[CandidateProfile] = None
     score: Optional[CandidateScore] = None
+    sessions: List[InterviewSessionResponse] = []

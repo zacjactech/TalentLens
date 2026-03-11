@@ -124,8 +124,27 @@ def get_analytics(
     completed_interviews = db.query(models.InterviewSession).filter(models.InterviewSession.status == "completed").count()
     avg_score = db.query(func.avg(models.CandidateScore.overall_score)).scalar() or 0
     
-    # Fake some temporal data based on real counts for the charts
-    total = max(1, total_candidates)
+    # Real hiring velocity (counts per month)
+    velocity_query = db.query(
+        func.to_char(models.Candidate.created_at, 'Mon').label('month'),
+        func.count(models.Candidate.id).label('count')
+    ).group_by(
+        func.to_char(models.Candidate.created_at, 'Mon'),
+        func.extract('month', models.Candidate.created_at)
+    ).order_by(
+        func.extract('month', models.Candidate.created_at)
+    ).all()
+    
+    hiring_velocity = [{"month": row.month, "hires": row.count} for row in velocity_query]
+    
+    # Real source distribution
+    source_query = db.query(
+        models.Candidate.source,
+        func.count(models.Candidate.id).label('count')
+    ).group_by(models.Candidate.source).all()
+    
+    source_distribution = [{"source": row.source or "Unknown", "count": row.count} for row in source_query]
+
     return {
         "overview": {
             "total_candidates": total_candidates,
@@ -133,16 +152,8 @@ def get_analytics(
             "completed_interviews": completed_interviews,
             "average_score": float(avg_score)
         },
-        "hiring_velocity": [
-            {"month": "Jan", "hires": max(0, int(total * 0.15))},
-            {"month": "Feb", "hires": max(0, int(total * 0.35))},
-            {"month": "Mar", "hires": max(0, int(total * 0.50))},
-        ],
-        "source_distribution": [
-            {"source": "LinkedIn", "count": max(0, int(total * 0.45))},
-            {"source": "Direct", "count": max(0, int(total * 0.35))},
-            {"source": "Referral", "count": max(0, int(total * 0.20))}
-        ]
+        "hiring_velocity": hiring_velocity,
+        "source_distribution": source_distribution
     }
 
 @router.get("/candidate-stats")

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAdminStats, useTopCandidates, useUpcomingInterviews, useRecentActivity } from '../hooks/useAdminQueries';
+import type { Candidate, Interview, Activity } from '../types';
 
 export function Dashboard() {
   const { data: stats, isLoading: statsLoading } = useAdminStats();
@@ -74,12 +75,12 @@ export function Dashboard() {
             <button
               onClick={() => {
                 const headers = ['Name', 'Email', 'Role', 'Status', 'Score'];
-                const rows = (topCandidates || []).map((c: any) => [
+                const rows = (topCandidates || []).map((c: Candidate) => [
                   `"${c.name}"`,
                   `"${c.email}"`,
                   `"${c.role}"`,
                   `"${c.status || 'Pending'}"`,
-                  c.score
+                  c.score?.overall_score || 0
                 ].join(','));
                 const csvContent = [headers.join(','), ...rows].join('\n');
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -112,7 +113,7 @@ export function Dashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-              {(topCandidates || []).map((candidate: any) => (
+              {(topCandidates || []).map((candidate: Candidate) => (
                 <tr key={candidate.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -128,7 +129,7 @@ export function Dashboard() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success text-sm font-bold">
-                      {candidate.score}/100
+                      {candidate.score?.overall_score || 0}/100
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -148,7 +149,7 @@ export function Dashboard() {
         <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-4">Upcoming Interviews</h4>
           <div className="space-y-4">
-            {(upcomingInterviews || []).map((interview: any) => (
+            {(upcomingInterviews || []).map((interview: Interview) => (
               <div key={interview.id} className="flex items-center gap-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                 <div className="w-10 h-10 rounded bg-white dark:bg-slate-700 flex flex-col items-center justify-center shadow-sm">
                   <span className="text-[10px] font-bold text-accent uppercase">{interview.month}</span>
@@ -167,7 +168,7 @@ export function Dashboard() {
         <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-4">Recent Activity</h4>
           <div className="space-y-6 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-px before:bg-slate-200 dark:before:bg-slate-800">
-            {(recentActivity || []).map((activity: any) => (
+            {(recentActivity || []).map((activity: Activity) => (
               <div key={activity.id} className="relative flex gap-4 pl-8">
                 <div className={`absolute left-0 top-0 w-9 h-9 rounded-full flex items-center justify-center text-white ring-4 ring-white dark:ring-slate-900 ${activity.type === 'success' ? 'bg-success' : activity.type === 'mail' ? 'bg-accent' : 'bg-slate-400'
                   }`}>

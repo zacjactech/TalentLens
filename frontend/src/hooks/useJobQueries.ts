@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../services/api';
+import type { Job } from '../types';
 
 export const jobKeys = {
     all: ['jobs'] as const,
@@ -17,10 +18,10 @@ export const useCreateJob = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: apiService.createJob,
-        onMutate: async (newJob) => {
+        onMutate: async (newJob: Partial<Job>) => {
             await queryClient.cancelQueries({ queryKey: jobKeys.lists() });
-            const previousJobs = queryClient.getQueryData(jobKeys.lists());
-            queryClient.setQueryData(jobKeys.lists(), (old: any) => [...(old || []), { id: Date.now(), ...newJob }]);
+            const previousJobs = queryClient.getQueryData<Job[]>(jobKeys.lists());
+            queryClient.setQueryData(jobKeys.lists(), (old: Job[] | undefined) => [...(old || []), { id: Date.now(), ...newJob } as Job]);
             return { previousJobs };
         },
         onError: (_err, _newJob, context) => {
@@ -35,12 +36,12 @@ export const useCreateJob = () => {
 export const useUpdateJob = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, data }: { id: number; data: any }) => apiService.updateJob(id, data),
+        mutationFn: ({ id, data }: { id: number; data: Partial<Job> }) => apiService.updateJob(id, data),
         onMutate: async ({ id, data }) => {
             await queryClient.cancelQueries({ queryKey: jobKeys.lists() });
-            const previousJobs = queryClient.getQueryData(jobKeys.lists());
-            queryClient.setQueryData(jobKeys.lists(), (old: any) =>
-                (old || []).map((job: any) => (job.id === id ? { ...job, ...data } : job))
+            const previousJobs = queryClient.getQueryData<Job[]>(jobKeys.lists());
+            queryClient.setQueryData(jobKeys.lists(), (old: Job[] | undefined) =>
+                (old || []).map((job) => (job.id === id ? { ...job, ...data } : job))
             );
             return { previousJobs };
         },
