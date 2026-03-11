@@ -2,7 +2,9 @@
 FROM python:3.10-bullseye
 
 # Skip interactive prompts
+# Build Trigger: 2026-03-11T09:05:00
 ENV DEBIAN_FRONTEND=noninteractive
+
 ENV PYTHONUNBUFFERED=1
 ENV DATABASE_URL=postgresql://talentlens:talentlens@localhost:5432/talentlens_db
 ENV REDIS_URL=redis://localhost:6379/0
