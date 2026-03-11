@@ -6,6 +6,18 @@ if [ -f /app/.env ]; then
     export $(grep -v '^#' /app/.env | sed 's/ *= */=/g' | xargs)
 fi
 
+# In single-container environments (like HF Spaces with supervisord), 
+# services like MinIO and Redis run on localhost, not separate hostnames.
+if [ -n "$MINIO_ENDPOINT" ] && [ "$MINIO_ENDPOINT" = "minio:9000" ]; then
+    echo "Adjusting MINIO_ENDPOINT to localhost:9000 for single-container mode"
+    export MINIO_ENDPOINT="localhost:9000"
+fi
+
+if [ -n "$REDIS_URL" ] && [ "$REDIS_URL" = "redis://redis:6379/0" ]; then
+    echo "Adjusting REDIS_URL to redis://localhost:6379/0 for single-container mode"
+    export REDIS_URL="redis://localhost:6379/0"
+fi
+
 # Check if using external database
 USE_EXTERNAL_DB=false
 if [[ "$DATABASE_URL" == *"supabase.com"* ]] || [[ "$DATABASE_URL" == *"pooler.supabase.com"* ]]; then
