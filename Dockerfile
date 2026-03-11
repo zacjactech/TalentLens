@@ -50,19 +50,24 @@ RUN mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/log/superv
 COPY backend/requirements.txt /app/backend/
 COPY chatbot/requirements.txt /app/chatbot/
 
+# Cleanup ANY global packages that might conflict (if they exist)
+RUN pip uninstall -y pydantic pydantic-settings alembic fastapi uvicorn
+
 # ---- Backend venv (pydantic v2) ----
 RUN python -m venv /opt/venv/backend && \
     /opt/venv/backend/bin/pip install --no-cache-dir --upgrade pip && \
     /opt/venv/backend/bin/pip install --no-cache-dir -r /app/backend/requirements.txt && \
     # Diagnostics
-    /opt/venv/backend/bin/python -c "import pydantic; print(f'Backend Pydantic version: {pydantic.__version__}')"
+    echo "Backend Venv Check:" && \
+    /opt/venv/backend/bin/python -c "import pydantic; import pydantic_settings; print(f'Pydantic: {pydantic.VERSION}'); print(f'Settings File: {pydantic_settings.__file__}')"
 
 # ---- Chatbot venv (pydantic v1 / Rasa) ----
 RUN python -m venv /opt/venv/chatbot && \
     /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade pip && \
     /opt/venv/chatbot/bin/pip install --no-cache-dir -r /app/chatbot/requirements.txt && \
     # Diagnostics
-    /opt/venv/chatbot/bin/python -c "import pydantic; print(f'Chatbot Pydantic version: {pydantic.__version__}')"
+    echo "Chatbot Venv Check:" && \
+    /opt/venv/chatbot/bin/python -c "import pydantic; print(f'Pydantic: {pydantic.VERSION}')"
 
 # ---- App Phase ----
 # Copy the rest of the application code
@@ -88,10 +93,14 @@ RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER talentlens WITH SUPERUSER PASSWORD 'talentlens';" && \
     createdb -O talentlens talentlens_db && \
     cd /app/backend && \
-    # Debug info right before migration
-    echo "Using python: $(/opt/venv/backend/bin/python --version)" && \
-    echo "Python path: $(/opt/venv/backend/bin/python -c 'import sys; print(sys.path)')" && \
-    PYTHONPATH=/app/backend /opt/venv/backend/bin/python -m alembic upgrade head
+    # VERBOSE DEBUGGING
+    echo "ENVIRONMENT DIAGNOSTICS:" && \
+    echo "User: $(whoami)" && \
+    echo "Python: $(/opt/venv/backend/bin/python --version)" && \
+    echo "Pip List (Backend):" && /opt/venv/backend/bin/pip list && \
+    echo "Python Path: $PYTHONPATH" && \
+    echo "Sys Path: $(/opt/venv/backend/bin/python -c 'import sys; print(sys.path)')" && \
+    PYTHONPATH=/app/backend PYTHONNOUSERSITE=1 /opt/venv/backend/bin/python -m alembic upgrade head
 USER root
 
 # Configure Nginx and Supervisor
