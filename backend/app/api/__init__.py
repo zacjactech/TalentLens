@@ -37,36 +37,42 @@ def get_logs():
 def get_diagnostics():
     try:
         import bcrypt
-        env_vars = {k: (v[:10] + "..." if len(v) > 10 else v) for k, v in os.environ.items() 
-                    if any(x in k for x in ["DATABASE", "POSTGRES", "SUPABASE", "REDIS", "MINIO"])}
-        
+        # Masked environment variables for troubleshooting
+        env_summary = {}
+        for k, v in os.environ.items():
+            if any(x in k for x in ["DATABASE", "POSTGRES", "SUPABASE", "REDIS", "MINIO", "GEMINI"]):
+                if len(v) > 12:
+                    env_summary[k] = f"{v[:6]}...{v[-4:]} ({len(v)} chars)"
+                else:
+                    env_summary[k] = v
+
         db_url = os.getenv("DATABASE_URL", "MISSING")
-        masked_db_url = db_url[:20] + "..." if db_url != "MISSING" else "MISSING"
         
+        # Robust host extraction
         db_host = "N/A"
-        if "@" in db_url:
-            db_host = db_url.split("@")[-1].split("/")[0]
-            
-        # Search for any .env files
-        env_files = []
-        for root, dirs, files in os.walk("/app"):
-            if ".env" in files:
-                env_files.append(os.path.join(root, ".env"))
-            for f in files:
-                if f.startswith(".env"):
-                    env_files.append(os.path.join(root, f))
+        if db_url != "MISSING":
+            try:
+                # Handle postgresql://user:pass@host:port/db
+                if "@" in db_url:
+                    db_host = db_url.split("@")[-1].split("/")[0]
+                else:
+                    # Handle postgresql://host:port/db
+                    parts = db_url.split("/")
+                    if len(parts) >= 3:
+                        db_host = parts[2]
+            except:
+                db_host = "ERROR_PARSING"
 
         return {
-            "database_url_status": "present" if db_url != "MISSING" else "MISSING",
-            "database_url_preview": masked_db_url,
+            "database_url_present": db_url != "MISSING",
             "database_host": db_host,
-            "relevant_env_vars": env_vars,
-            "env_files_found": env_files,
+            "env_summary": env_summary,
             "bcrypt_version": getattr(bcrypt, "__version__", "unknown"),
-            "cwd": os.getcwd(),
+            "os_cwd": os.getcwd(),
+            "os_uid": os.getuid() if hasattr(os, "getuid") else "N/A"
         }
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": str(e), "traceback": traceback.format_exc()}
 
 api_router.include_router(candidates.router, prefix="/candidates", tags=["candidates"])
 api_router.include_router(interviews.router, prefix="/interviews", tags=["interviews"])
