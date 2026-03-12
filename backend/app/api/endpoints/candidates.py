@@ -72,3 +72,37 @@ def read_candidate(
     if not candidate:
         raise HTTPException(status_code=404, detail="Candidate not found")
     return candidate
+
+@router.post("/{candidate_id}/score", response_model=schemas.ScoringResponse)
+def update_candidate_score(
+    *,
+    db: Session = Depends(deps.get_db),
+    candidate_id: int,
+    score_in: schemas.ScoreUpdate,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """Manually update candidate score."""
+    score = db.query(models.CandidateScore).filter(models.CandidateScore.candidate_id == candidate_id).first()
+    if not score:
+        score = models.CandidateScore(candidate_id=candidate_id)
+        db.add(score)
+    
+    update_data = score_in.model_dump(exclude_unset=True)
+    
+    if "experience_score" in update_data:
+        score.experience_fit = update_data["experience_score"]
+    if "stability_score" in update_data:
+        score.career_stability = update_data["stability_score"]
+    if "communication_score" in update_data:
+        score.communication_quality = update_data["communication_score"]
+    if "typing_score" in update_data:
+        score.typing_test = update_data["typing_score"]
+    if "role_specific_score" in update_data:
+        score.role_specific = update_data["role_specific_score"]
+    if "overall_score" in update_data:
+        score.overall_score = update_data["overall_score"]
+        
+    score.is_overridden = True
+    db.commit()
+    db.refresh(score)
+    return score

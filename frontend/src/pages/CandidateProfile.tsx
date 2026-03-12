@@ -1,11 +1,23 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useCandidate, useCandidateTranscript } from '../hooks/useCandidateQueries';
+import { useCandidate, useCandidateTranscript, useUpdateCandidateScore } from '../hooks/useCandidateQueries';
 import type { InterviewMessage } from '../types';
 
 export function CandidateProfile() {
   const { id } = useParams<{ id: string }>();
   const { data: candidate, isLoading: candidateLoading, isFetching: candidateFetching } = useCandidate(id || '');
   const { data: transcript = [], isLoading: transcriptLoading, isFetching: transcriptFetching } = useCandidateTranscript(id ? parseInt(id) : 0);
+  const updateScore = useUpdateCandidateScore();
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    experience_score: 0,
+    stability_score: 0,
+    communication_score: 0,
+    typing_score: 0,
+    role_specific_score: 0,
+    overall_score: 0
+  });
 
   const loading = candidateLoading || transcriptLoading;
   const isSyncing = candidateFetching || transcriptFetching;
@@ -70,12 +82,20 @@ export function CandidateProfile() {
               </button>
               <button
                 onClick={() => {
+                  window.print();
+                }}
+                className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all print:hidden"
+              >
+                <span className="material-symbols-outlined text-lg">picture_as_pdf</span> Download PDF Report
+              </button>
+              <button
+                onClick={() => {
                   const meetUrl = import.meta.env.VITE_MEETING_BASE_URL || 'https://meet.google.com/new';
                   window.open(meetUrl, '_blank');
                 }}
-                className="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2"
+                className="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2 print:hidden"
               >
-                <span className="material-symbols-outlined text-lg">calendar_month</span> Schedule Follow-up Interview
+                <span className="material-symbols-outlined text-lg">calendar_month</span> Schedule Follow-up
               </button>
             </div>
           </div>
@@ -91,7 +111,25 @@ export function CandidateProfile() {
               <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">analytics</span> AI Score Breakdown
               </h3>
-              <span className="text-xs text-slate-400 font-medium">Last updated: {new Date(candidate.updated_at).toLocaleDateString()}</span>
+              <div className="flex items-center gap-2 print:hidden">
+                <button 
+                  onClick={() => {
+                    setEditFormData({
+                      experience_score: candidate.score?.experience_fit || 0,
+                      stability_score: candidate.score?.career_stability || 0,
+                      communication_score: candidate.score?.communication_quality || 0,
+                      typing_score: candidate.score?.typing_test || 0,
+                      role_specific_score: candidate.score?.role_specific || 0,
+                      overall_score: candidate.score?.overall_score || 0
+                    });
+                    setIsEditModalOpen(true);
+                  }}
+                  className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-sm">edit</span> Manual Override
+                </button>
+                <span className="text-xs text-slate-400 font-medium">Last updated: {new Date(candidate.updated_at).toLocaleDateString()}</span>
+              </div>
             </div>
             <div className="space-y-6">
               {[
@@ -208,6 +246,102 @@ export function CandidateProfile() {
           </div>
         </div>
       </div>
+
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 print:hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Manual Score Override</h2>
+              <button onClick={() => setIsEditModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              {[
+                { label: 'Experience Fit (0-30)', key: 'experience_score' },
+                { label: 'Career Stability (0-20)', key: 'stability_score' },
+                { label: 'Communication Quality (0-20)', key: 'communication_score' },
+                { label: 'Typing Test (0-15)', key: 'typing_score' },
+                { label: 'Role Specific (0-15)', key: 'role_specific_score' },
+                { label: 'Overall Score (0-100)', key: 'overall_score' },
+              ].map((item) => (
+                <div key={item.key} className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{item.label}</label>
+                  <input 
+                    type="number" 
+                    value={editFormData[item.key as keyof typeof editFormData]} 
+                    onChange={e => setEditFormData({ ...editFormData, [item.key]: parseInt(e.target.value) || 0 })}
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary outline-none" 
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/50">
+              <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold">Cancel</button>
+              <button 
+                onClick={async () => {
+                  if (id) {
+                    await updateScore.mutateAsync({ id: parseInt(id), scoreData: editFormData });
+                    setIsEditModalOpen(false);
+                  }
+                }} 
+                className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-primary/20 hover:bg-primary/90"
+              >
+                {updateScore.isPending ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Print Styles */}
+      <style>{`
+        @media print {
+          body {
+            background: white !important;
+            color: black !important;
+          }
+          header, .print\\:hidden, .material-symbols-outlined:not(.text-primary) {
+            display: none !important;
+          }
+          .p-8 {
+            padding: 1rem !important;
+          }
+          .max-w-7xl {
+            max-width: 100% !important;
+          }
+          .grid {
+            display: block !important;
+          }
+          .bg-white, .dark\\:bg-slate-900 {
+            background: white !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
+          .shadow-sm, .border {
+            box-shadow: none !important;
+            border: none !important;
+          }
+          .h-\\[500px\\] {
+            height: auto !important;
+            overflow: visible !important;
+          }
+          .overflow-y-auto {
+            overflow: visible !important;
+          }
+          p, h1, h2, h3, h4, span {
+            color: black !important;
+          }
+          .text-primary, .text-success {
+            color: black !important;
+            font-weight: bold !important;
+          }
+          .bg-white {
+            page-break-inside: avoid;
+            margin-bottom: 2rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }

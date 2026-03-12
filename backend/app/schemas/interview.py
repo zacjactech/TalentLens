@@ -40,6 +40,14 @@ class ScoringCreate(BaseModel):
     overall_score: int
     ai_summary: str
 
+class ScoreUpdate(BaseModel):
+    experience_score: Optional[int] = None
+    stability_score: Optional[int] = None
+    communication_score: Optional[int] = None
+    typing_score: Optional[int] = None
+    role_specific_score: Optional[int] = None
+    overall_score: Optional[int] = None
+
 class ScoringResponse(ScoringCreate):
     model_config = ConfigDict(from_attributes=True)
 

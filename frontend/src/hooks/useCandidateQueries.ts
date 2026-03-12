@@ -45,3 +45,15 @@ export const useCreateCandidate = () => {
         },
     });
 };
+
+export const useUpdateCandidateScore = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, scoreData }: { id: number; scoreData: any }) => 
+            apiService.updateCandidateScore(id, scoreData),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: candidateKeys.detail(variables.id.toString()) });
+            queryClient.invalidateQueries({ queryKey: candidateKeys.lists() });
+        },
+    });
+};

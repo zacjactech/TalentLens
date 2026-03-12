@@ -86,6 +86,11 @@ export const apiService = {
     return response.data;
   },
 
+  updateCandidateScore: async (id: number, scoreData: any) => {
+    const response = await apiClient.post(`/candidates/${id}/score`, scoreData);
+    return response.data;
+  },
+
   // Admin/Stats Endpoints
   getStats: async (): Promise<AdminStats> => {
     const response = await apiClient.get('/admin/stats');
