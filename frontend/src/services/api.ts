@@ -82,7 +82,7 @@ export const apiService = {
   },
 
   createCandidate: async (candidateData: Partial<Candidate>) => {
-    const response = await apiClient.post('/candidates', candidateData);
+    const response = await apiClient.post('/candidates/', candidateData);
     return response.data;
   },
 

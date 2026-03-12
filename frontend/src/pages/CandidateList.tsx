@@ -37,17 +37,18 @@ export function CandidateList() {
     email: '',
     phone: '',
     target_role: 'Backend Engineer',
-    status: 'Pending'
+    status: 'pending'
   });
 
   const handleSave = async () => {
     try {
       await createCandidate.mutateAsync(formData);
       setIsModalOpen(false);
-      setFormData({ first_name: '', last_name: '', email: '', phone: '', target_role: 'Backend Engineer', status: 'Pending' });
-    } catch (err) {
+      setFormData({ first_name: '', last_name: '', email: '', phone: '', target_role: 'Backend Engineer', status: 'pending' });
+    } catch (err: any) {
       console.error("Failed to save candidate:", err);
-      alert("Failed to save candidate. See console for details.");
+      const errorDetail = err.response?.data?.detail || err.message || "Unknown error";
+      alert(`Failed to save candidate: ${errorDetail}`);
     }
   };
 
@@ -287,10 +288,10 @@ export function CandidateList() {
                 <div className="space-y-1">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
                   <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-200">
-                    <option>Pending</option>
-                    <option>Scored</option>
-                    <option>Interviewed</option>
-                    <option>Rejected</option>
+                    <option value="pending">Pending</option>
+                    <option value="scored">Scored</option>
+                    <option value="interviewed">Interviewed</option>
+                    <option value="rejected">Rejected</option>
                   </select>
                 </div>
               </div>
