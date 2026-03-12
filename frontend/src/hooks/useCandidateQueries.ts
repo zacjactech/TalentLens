@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../services/api';
 import type { Candidate, InterviewMessage } from '../types';
 
@@ -33,5 +33,15 @@ export const useCandidateTranscript = (id: number) => {
         queryKey: candidateKeys.transcript(id),
         queryFn: () => apiService.getCandidateTranscript(id),
         enabled: id > 0,
+    });
+};
+
+export const useCreateCandidate = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: apiService.createCandidate,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: candidateKeys.lists() });
+        },
     });
 };

@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { get, set, del } from 'idb-keyval';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client';
 
 // Create the standard React Query client
@@ -35,3 +36,10 @@ export function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery") {
 }
 
 export const indexedDBPersister = createIDBPersister();
+
+// Initialize persistence
+persistQueryClient({
+    queryClient,
+    persister: indexedDBPersister,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 Days
+});

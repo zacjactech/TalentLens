@@ -3,7 +3,7 @@ import { useJobs, useCreateJob, useUpdateJob } from '../hooks/useJobQueries';
 import type { Job } from '../types';
 
 export function JobPostings() {
-    const { data: jobs = [], isLoading: loading, error } = useJobs();
+    const { data: jobs = [], isLoading: loading, isFetching, error } = useJobs();
     const createJob = useCreateJob();
     const updateJob = useUpdateJob();
 
@@ -88,10 +88,18 @@ export function JobPostings() {
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Job Postings</h1>
                     <p className="text-slate-500 mt-1">Manage open roles and publish job requirements.</p>
                 </div>
-                <button onClick={openCreateModal} className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all shadow-md shadow-primary/20">
-                    <span className="material-symbols-outlined text-[20px]">add_box</span>
-                    Create Job Posting
-                </button>
+                <div className="flex items-center gap-4">
+                    {isFetching && !loading && (
+                        <div className="flex items-center gap-2 text-xs text-primary font-medium bg-primary/5 px-2 py-1 rounded-full animate-pulse">
+                            <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                            Syncing
+                        </div>
+                    )}
+                    <button onClick={openCreateModal} className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all shadow-md shadow-primary/20">
+                        <span className="material-symbols-outlined text-[20px]">add_box</span>
+                        Create Job Posting
+                    </button>
+                </div>
             </div>
 
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">

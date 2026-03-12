@@ -4,10 +4,11 @@ import type { InterviewMessage } from '../types';
 
 export function CandidateProfile() {
   const { id } = useParams<{ id: string }>();
-  const { data: candidate, isLoading: candidateLoading } = useCandidate(id || '');
-  const { data: transcript = [], isLoading: transcriptLoading } = useCandidateTranscript(id ? parseInt(id) : 0);
+  const { data: candidate, isLoading: candidateLoading, isFetching: candidateFetching } = useCandidate(id || '');
+  const { data: transcript = [], isLoading: transcriptLoading, isFetching: transcriptFetching } = useCandidateTranscript(id ? parseInt(id) : 0);
 
   const loading = candidateLoading || transcriptLoading;
+  const isSyncing = candidateFetching || transcriptFetching;
 
   if (loading && !candidate) {
     return (
@@ -47,28 +48,36 @@ export function CandidateProfile() {
               <p className="text-2xl font-black text-success">{candidate.score?.overall_score || 0}/100</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => {
-                if (candidate.resume_url) {
-                  window.open(candidate.resume_url, '_blank');
-                } else {
-                  alert("Resume not available for this candidate.");
-                }
-              }}
-              className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-            >
-              <span className="material-symbols-outlined text-lg">download</span> Resume
-            </button>
-            <button
-              onClick={() => {
-                const meetUrl = import.meta.env.VITE_MEETING_BASE_URL || 'https://meet.google.com/new';
-                window.open(meetUrl, '_blank');
-              }}
-              className="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-lg">calendar_month</span> Schedule Follow-up Interview
-            </button>
+          <div className="flex items-center gap-4">
+            {isSyncing && !loading && (
+              <div className="flex items-center gap-2 text-xs text-primary font-medium bg-primary/5 px-2 py-1 rounded-full animate-pulse">
+                <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                Syncing
+              </div>
+            )}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  if (candidate.resume_url) {
+                    window.open(candidate.resume_url, '_blank');
+                  } else {
+                    alert("Resume not available for this candidate.");
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              >
+                <span className="material-symbols-outlined text-lg">download</span> Resume
+              </button>
+              <button
+                onClick={() => {
+                  const meetUrl = import.meta.env.VITE_MEETING_BASE_URL || 'https://meet.google.com/new';
+                  window.open(meetUrl, '_blank');
+                }}
+                className="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-lg">calendar_month</span> Schedule Follow-up Interview
+              </button>
+            </div>
           </div>
         </div>
       </header>

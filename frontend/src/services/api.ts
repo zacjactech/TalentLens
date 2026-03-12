@@ -81,6 +81,11 @@ export const apiService = {
     return response.data;
   },
 
+  createCandidate: async (candidateData: Partial<Candidate>) => {
+    const response = await apiClient.post('/candidates', candidateData);
+    return response.data;
+  },
+
   // Admin/Stats Endpoints
   getStats: async (): Promise<AdminStats> => {
     const response = await apiClient.get('/admin/stats');

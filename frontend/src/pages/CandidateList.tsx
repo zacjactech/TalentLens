@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useCandidates } from '../hooks/useCandidateQueries';
+import { useCandidates, useCreateCandidate } from '../hooks/useCandidateQueries';
 import { useCandidateStats } from '../hooks/useAdminQueries';
 import type { Candidate } from '../types';
 
@@ -18,7 +18,7 @@ export function CandidateList() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const { data: candidates = [], isLoading: candidatesLoading } = useCandidates(
+  const { data: candidates = [], isLoading: candidatesLoading, isFetching: candidatesFetching } = useCandidates(
     (currentPage - 1) * itemsPerPage,
     itemsPerPage,
     roleFilter !== 'Filter by Role' ? roleFilter : undefined,
@@ -26,9 +26,33 @@ export function CandidateList() {
     debouncedSearch || undefined
   );
 
-  const { data: stats = { average_score: 0, high_match_count: 0, pending_assessment_count: 0 }, isLoading: statsLoading } = useCandidateStats();
+  const { data: stats = { average_score: 0, high_match_count: 0, pending_assessment_count: 0 }, isLoading: statsLoading, isFetching: statsFetching } = useCandidateStats();
+  const createCandidate = useCreateCandidate();
+
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    target_role: 'Backend Engineer',
+    status: 'Pending'
+  });
+
+  const handleSave = async () => {
+    try {
+      await createCandidate.mutateAsync(formData);
+      setIsModalOpen(false);
+      setFormData({ first_name: '', last_name: '', email: '', phone: '', target_role: 'Backend Engineer', status: 'Pending' });
+    } catch (err) {
+      console.error("Failed to save candidate:", err);
+      alert("Failed to save candidate. See console for details.");
+    }
+  };
 
   const loading = candidatesLoading || statsLoading;
+  const isSyncing = candidatesFetching || statsFetching;
 
   if (loading && candidates.length === 0) {
     return (
@@ -39,18 +63,31 @@ export function CandidateList() {
   }
 
   return (
-    <div className="p-8 space-y-6 max-w-[1200px] mx-auto w-full">
-      {/* Page Title */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Candidate Management</h2>
-          <p className="text-slate-500 text-sm">Manage applicants and track AI match scores across all open roles.</p>
+    <>
+      <div className="p-8 space-y-6 max-w-[1200px] mx-auto w-full">
+        {/* Page Title */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Candidate Management</h2>
+            <p className="text-slate-500 text-sm">Manage applicants and track AI match scores across all open roles.</p>
+          </div>
+          <div className="flex items-center gap-4">
+            {isSyncing && !loading && (
+              <div className="flex items-center gap-2 text-xs text-primary font-medium bg-primary/5 px-2 py-1 rounded-full animate-pulse">
+                <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                Syncing
+              </div>
+            )}
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all shadow-md shadow-primary/20"
+            >
+              <span className="material-symbols-outlined text-[20px]">person_add</span>
+              Add New Candidate
+            </button>
+          </div>
         </div>
-        <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all shadow-md shadow-primary/20">
-          <span className="material-symbols-outlined text-[20px]">person_add</span>
-          Add New Candidate
-        </button>
-      </div>
+
 
       {/* Management Tools Container */}
       <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
@@ -210,6 +247,69 @@ export function CandidateList() {
           </div>
         </div>
       </div>
-    </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Add New Candidate</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">First Name*</label>
+                  <input type="text" value={formData.first_name} onChange={e => setFormData({ ...formData, first_name: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-900 dark:text-slate-100" placeholder="e.g. John" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Last Name*</label>
+                  <input type="text" value={formData.last_name} onChange={e => setFormData({ ...formData, last_name: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-900 dark:text-slate-100" placeholder="e.g. Doe" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Email*</label>
+                  <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-900 dark:text-slate-100" placeholder="e.g. john@example.com" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Phone</label>
+                  <input type="text" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-900 dark:text-slate-100" placeholder="e.g. +1 234 567 890" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Target Role</label>
+                  <select value={formData.target_role} onChange={e => setFormData({ ...formData, target_role: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-200">
+                    <option>Backend Engineer</option>
+                    <option>Frontend Engineer</option>
+                    <option>Product Manager</option>
+                    <option>UI/UX Designer</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
+                  <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-200">
+                    <option>Pending</option>
+                    <option>Scored</option>
+                    <option>Interviewed</option>
+                    <option>Rejected</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/50">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+              <button 
+                onClick={handleSave} 
+                disabled={!formData.first_name || !formData.last_name || !formData.email || createCandidate.isPending} 
+                className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-primary/20 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {createCandidate.isPending && <span className="material-symbols-outlined text-sm animate-spin">sync</span>}
+                Save Candidate
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </div>
+    </>
   );
 }
