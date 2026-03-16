@@ -13,7 +13,16 @@ app = FastAPI(
 )
 
 @app.on_event("startup")
-def list_routes():
+def startup_event():
+    print("--- SYSTEM DIAGNOSTICS ---")
+    import os
+    for k, v in os.environ.items():
+        if any(x in k for x in ["DATABASE", "POSTGRES", "SUPABASE", "REDIS", "MINIO", "GEMINI", "JWT", "SECRET"]):
+            masked = f"{v[:4]}...{v[-4:]}" if len(v) > 8 else "***"
+            print(f"Env: {k}={masked}")
+    print(f"CWD: {os.getcwd()}")
+    print("-------------------------")
+    
     print("--- REGISTERED ROUTES ---")
     for route in app.routes:
         print(f"Path: {route.path}")

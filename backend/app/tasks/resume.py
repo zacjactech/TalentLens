@@ -57,7 +57,7 @@ def parse_resume(candidate_id: int, file_id: int):
         """
         
         gemini_response = genai_client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-1.5-flash',
             contents=prompt,
         )
         
