@@ -14,10 +14,10 @@ if [ -n "$REDIS_URL" ] && [ "$REDIS_URL" = "redis://redis:6379/0" ]; then
     export REDIS_URL="redis://localhost:6379/0"
 fi
 
-# Run migrations
+# Run migrations as appuser
 echo "Running database migrations..."
 cd /app/backend
-PYTHONPATH=/app/backend PYTHONNOUSERSITE=1 /opt/venv/backend/bin/python -m alembic upgrade head
+sudo -u appuser PYTHONPATH=/app/backend /opt/venv/backend/bin/python -m alembic upgrade head
 
 # Start Supervisor
 echo "Starting Supervisord..."

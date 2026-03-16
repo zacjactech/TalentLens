@@ -33,9 +33,10 @@ RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio \
 
 WORKDIR /app
 
-# Create directories
-RUN mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/log/supervisor /var/run/postgresql /var/run/redis && \
-    chmod -R 777 /data /var/log /var/run /var/lib/redis
+# Create directories and non-root user
+RUN useradd -m -s /bin/bash appuser && \
+    mkdir -p /app/backend /app/frontend /app/chatbot /data/minio /var/log/supervisor /var/run/postgresql /var/run/redis /var/www/html && \
+    chown -R appuser:appuser /app /data /var/log /var/run /var/www/html
 
 # Dependencies
 COPY backend/requirements.txt /app/backend/
@@ -54,6 +55,10 @@ RUN python -m venv /opt/venv/chatbot && \
     /opt/venv/chatbot/bin/pip install --no-cache-dir --upgrade -r /app/chatbot/requirements.txt
 
 COPY . .
+
+# Train Rasa
+RUN /opt/venv/chatbot/bin/rasa train -d chatbot/domain.yml -c chatbot/config.yml --out chatbot/models --data chatbot/data && \
+    chown -R appuser:appuser /app/chatbot/models
 
 # Build Frontend
 WORKDIR /app/frontend

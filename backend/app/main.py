@@ -14,32 +14,25 @@ app = FastAPI(
 
 @app.on_event("startup")
 def startup_event():
-    print("--- SYSTEM DIAGNOSTICS ---")
-    import os
-    for k, v in os.environ.items():
-        if any(x in k for x in ["DATABASE", "POSTGRES", "SUPABASE", "REDIS", "MINIO", "GEMINI", "JWT", "SECRET"]):
-            masked = f"{v[:4]}...{v[-4:]}" if len(v) > 8 else "***"
-            print(f"Env: {k}={masked}")
-    print(f"CWD: {os.getcwd()}")
-    print("-------------------------")
-    
-    print("--- REGISTERED ROUTES ---")
-    for route in app.routes:
-        print(f"Path: {route.path}")
+    print("--- SYSTEM STARTUP ---")
+    print(f"Project: {settings.PROJECT_NAME}")
+    print(f"Version: 1.0.0")
     print("-------------------------")
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    tb = traceback.format_exc()
+    # Log the full exception server-side
+    import logging
+    logging.error(f"Global exception: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal Server Error", "traceback": tb},
+        content={"detail": "Internal Server Error"},
     )
 
-# Set all CORS enabled origins
+# Set restricted CORS origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

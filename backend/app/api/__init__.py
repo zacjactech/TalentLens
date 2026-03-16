@@ -10,7 +10,12 @@ def health_check():
     return {"status": "healthy"}
 
 @api_router.get("/files")
-def list_backend_files():
+def list_backend_files(
+    current_user: models.User = Depends(deps.get_current_active_user)
+):
+    # Only admins can list files
+    if current_user.role.name != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
     try:
         return {
             "root_files": os.listdir("/app"),
@@ -23,7 +28,11 @@ def list_backend_files():
         return {"error": str(e)}
 
 @api_router.get("/logs")
-def get_logs():
+def get_logs(
+    current_user: models.User = Depends(deps.get_current_active_user)
+):
+    if current_user.role.name != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
     try:
         if os.path.exists("error.log"):
             with open("error.log", "r") as f:
@@ -34,9 +43,14 @@ def get_logs():
         return {"error": str(e)}
 
 @api_router.get("/diagnostics")
-def get_diagnostics():
+def get_diagnostics(
+    current_user: models.User = Depends(deps.get_current_active_user)
+):
+    if current_user.role.name != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
     try:
         import bcrypt
+        import traceback
         # Masked environment variables for troubleshooting
         env_summary = {}
         for k, v in os.environ.items():

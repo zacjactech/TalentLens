@@ -6,7 +6,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 
 API_BASE_URL = os.getenv("BACKEND_URL", "http://backend:8000")
-INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY", "super-secret-key-change-me")
+INTERNAL_API_KEY = os.environ["INTERNAL_API_KEY"]
 
 import random
 ...

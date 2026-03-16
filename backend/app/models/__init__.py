@@ -139,6 +139,7 @@ class ResumeFile(Base):
     candidate_id = Column(Integer, ForeignKey("candidates.id", ondelete="CASCADE"))
     file_path = Column(String, nullable=False) # MinIO object path
     parsed_content = Column(Text, nullable=True)
+    parsed = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     candidate = relationship("Candidate", back_populates="resumes")

@@ -38,6 +38,14 @@ class CandidateProfile(BaseModel):
     experience_analysis: Optional[str] = None
     final_evaluation: Optional[str] = None
 
+class ScoreUpdate(BaseModel):
+    experience_score: Optional[float] = None
+    stability_score: Optional[float] = None
+    communication_score: Optional[float] = None
+    typing_score: Optional[float] = None
+    role_specific_score: Optional[float] = None
+    overall_score: Optional[float] = None
+
 class CandidateScore(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     experience_fit: float = 0.0
