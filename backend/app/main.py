@@ -29,10 +29,16 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": "Internal Server Error"},
     )
 
-# Set restricted CORS origins
+# Set restricted CORS origins (BACKEND_CORS_ORIGINS is a comma-separated string or "*")
+_cors_origins_raw = settings.BACKEND_CORS_ORIGINS
+if _cors_origins_raw == "*":
+    _cors_origins = ["*"]
+else:
+    _cors_origins = [o.strip() for o in _cors_origins_raw.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

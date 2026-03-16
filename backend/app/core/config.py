@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     GOOGLE_CALENDAR_CREDENTIALS_JSON: str = ""
     INTERNAL_API_KEY: str
     MEETING_BASE_URL: str = "https://meet.google.com/fallback-link"
+    BACKEND_CORS_ORIGINS: str = "*"  # Comma-separated list of allowed origins, or "*" for all
 
     class Config:
         extra = 'ignore'
