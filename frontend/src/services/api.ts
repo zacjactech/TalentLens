@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Analytics, Candidate, Job, User, Interview, Activity, InterviewMessage, AdminStats } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1/';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -26,14 +26,14 @@ export const apiService = {
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
-    const response = await apiClient.post('/auth/login/', formData, {
+    const response = await apiClient.post('auth/login/', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
     return response.data;
   },
 
   register: async (email: string, password: string) => {
-    const response = await apiClient.post('/auth/register', {
+    const response = await apiClient.post('auth/register/', {
       email,
       password,
     });
@@ -41,48 +41,48 @@ export const apiService = {
   },
 
   getMe: async (): Promise<User> => {
-    const response = await apiClient.get('/auth/me');
+    const response = await apiClient.get('auth/me/');
     return response.data;
   },
 
   resetPassword: async (email: string) => {
-    const response = await apiClient.post('/auth/reset-password', { email });
+    const response = await apiClient.post('auth/reset-password/', { email });
     return response.data;
   },
 
   // Settings Endpoints
   getSettings: async () => {
-    const response = await apiClient.get('/settings');
+    const response = await apiClient.get('settings/');
     return response.data;
   },
 
   updateSettings: async (settingsData: Record<string, unknown>) => {
-    const response = await apiClient.put('/settings', settingsData);
+    const response = await apiClient.put('settings/', settingsData);
     return response.data;
   },
 
   // Candidate Endpoints
   getTopCandidates: async (limit = 10): Promise<Candidate[]> => {
-    const response = await apiClient.get('/admin/top-candidates/', {
+    const response = await apiClient.get('admin/top-candidates/', {
       params: { limit }
     });
     return response.data;
   },
 
   getAllCandidates: async (skip = 0, limit = 10, role?: string, status?: string, search?: string): Promise<Candidate[]> => {
-    const response = await apiClient.get('/candidates/', {
+    const response = await apiClient.get('candidates/', {
       params: { skip, limit, role, status, search }
     });
     return response.data;
   },
 
   getCandidateById: async (id: string): Promise<Candidate> => {
-    const response = await apiClient.get(`/candidates/${id}`);
+    const response = await apiClient.get(`candidates/${id}/`);
     return response.data;
   },
 
   createCandidate: async (candidateData: Partial<Candidate>) => {
-    const response = await apiClient.post('/candidates/', candidateData);
+    const response = await apiClient.post('candidates/', candidateData);
     return response.data;
   },
 
@@ -93,17 +93,17 @@ export const apiService = {
 
   // Admin/Stats Endpoints
   getStats: async (): Promise<AdminStats> => {
-    const response = await apiClient.get('/admin/stats');
+    const response = await apiClient.get('admin/stats/');
     return response.data;
   },
 
   getRecentActivity: async (): Promise<Activity[]> => {
-    const response = await apiClient.get('/admin/recent-activity');
+    const response = await apiClient.get('admin/recent-activity/');
     return response.data;
   },
 
   getUpcomingInterviews: async (): Promise<Interview[]> => {
-    const response = await apiClient.get('/admin/upcoming-interviews');
+    const response = await apiClient.get('admin/upcoming-interviews/');
     return response.data;
   },
 
@@ -122,12 +122,12 @@ export const apiService = {
   },
 
   getAnalytics: async (): Promise<Analytics> => {
-    const response = await apiClient.get('/admin/analytics/');
+    const response = await apiClient.get('admin/analytics/');
     return response.data;
   },
 
   getCandidateStats: async () => {
-    const response = await apiClient.get('/admin/candidate-stats/');
+    const response = await apiClient.get('admin/candidate-stats/');
     return response.data;
   },
 
@@ -153,12 +153,12 @@ export const apiService = {
 
   // Jobs Endpoints
   getJobs: async (): Promise<Job[]> => {
-    const response = await apiClient.get('/jobs/');
+    const response = await apiClient.get('jobs/');
     return response.data;
   },
 
   createJob: async (jobData: Partial<Job>) => {
-    const response = await apiClient.post('/jobs/', jobData);
+    const response = await apiClient.post('jobs/', jobData);
     return response.data;
   },
 
