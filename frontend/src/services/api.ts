@@ -26,7 +26,7 @@ export const apiService = {
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
-    const response = await apiClient.post('/auth/login', formData, {
+    const response = await apiClient.post('/auth/login/', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
     return response.data;
@@ -63,14 +63,14 @@ export const apiService = {
 
   // Candidate Endpoints
   getTopCandidates: async (limit = 10): Promise<Candidate[]> => {
-    const response = await apiClient.get('/admin/top-candidates', {
+    const response = await apiClient.get('/admin/top-candidates/', {
       params: { limit }
     });
     return response.data;
   },
 
   getAllCandidates: async (skip = 0, limit = 10, role?: string, status?: string, search?: string): Promise<Candidate[]> => {
-    const response = await apiClient.get('/candidates', {
+    const response = await apiClient.get('/candidates/', {
       params: { skip, limit, role, status, search }
     });
     return response.data;
@@ -122,12 +122,12 @@ export const apiService = {
   },
 
   getAnalytics: async (): Promise<Analytics> => {
-    const response = await apiClient.get('/admin/analytics');
+    const response = await apiClient.get('/admin/analytics/');
     return response.data;
   },
 
   getCandidateStats: async () => {
-    const response = await apiClient.get('/admin/candidate-stats');
+    const response = await apiClient.get('/admin/candidate-stats/');
     return response.data;
   },
 
@@ -153,12 +153,12 @@ export const apiService = {
 
   // Jobs Endpoints
   getJobs: async (): Promise<Job[]> => {
-    const response = await apiClient.get('/jobs');
+    const response = await apiClient.get('/jobs/');
     return response.data;
   },
 
   createJob: async (jobData: Partial<Job>) => {
-    const response = await apiClient.post('/jobs', jobData);
+    const response = await apiClient.post('/jobs/', jobData);
     return response.data;
   },
 

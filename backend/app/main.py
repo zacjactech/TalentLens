@@ -12,6 +12,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+@app.middleware("http")
+async def force_https_middleware(request: Request, call_next):
+    # Check if the request was forwarded as HTTPS
+    if request.headers.get("x-forwarded-proto") == "https":
+        # Force the scope to use 'https' scheme
+        request.scope["scheme"] = "https"
+    response = await call_next(request)
+    return response
+
 @app.on_event("startup")
 def startup_event():
     print("--- SYSTEM STARTUP ---")
